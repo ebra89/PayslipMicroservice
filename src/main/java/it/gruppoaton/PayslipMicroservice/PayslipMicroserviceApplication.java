@@ -10,7 +10,7 @@ public class PayslipMicroserviceApplication {
 
 		SpringApplication.run(PayslipMicroserviceApplication.class, args);
 
-		System.out.println("QUESTO MESE NIENTE STIPENDIO!!!");
+		System.out.println("Sei un fregno!!!");
       
 
 
