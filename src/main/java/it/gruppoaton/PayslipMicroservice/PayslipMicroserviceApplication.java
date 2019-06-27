@@ -11,6 +11,8 @@ public class PayslipMicroserviceApplication {
 		SpringApplication.run(PayslipMicroserviceApplication.class, args);
 
 		System.out.println("hello world");
+        System.out.println("hello world");
+
 	}
 
 }
