@@ -1,27 +1,16 @@
-package it.gruppoaton.PayslipMicroservice.entities;
+package it.gruppoaton.PayslipMicroservice.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+public class EmployeeModel {
 
-@Entity
-public class Employee {
-
-    @Id
     private String fiscalCode;
-    @NotEmpty
     private String firstName;
-    @NotEmpty
     private String lastName;
-    @Email
-    @NotEmpty
     private String email;
 
-    public Employee() {
+    public EmployeeModel() {
     }
 
-    public Employee(String fiscalCode, String firstName, String lastName, String email) {
+    public EmployeeModel(String fiscalCode, String firstName, String lastName, String email) {
         this.fiscalCode = fiscalCode;
         this.firstName = firstName;
         this.lastName = lastName;
