@@ -18,7 +18,6 @@ public class Payslip {
     private int year;
 
     @ManyToOne
-    @JoinColumn(name = "FISCAL_CODE")
     private Employee employee;
 
     public Payslip() {

@@ -1,9 +1,6 @@
 package it.gruppoaton.PayslipMicroservice.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 public class Employee {
 
     @Id
+    @Column(unique = true)
     private String fiscalCode;
     @NotEmpty
     private String firstName;

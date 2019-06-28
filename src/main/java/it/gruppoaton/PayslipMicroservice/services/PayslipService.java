@@ -16,14 +16,31 @@ public class PayslipService {
     private PayslipRepository payslipRepository;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
 
-    public void savePayslip(Payslip payslip){
+
+    public void addPayslip(Payslip payslip, Employee employee){
+        payslip.setEmployee(employee);
+        payslipRepository.save(payslip);
+    }
+    //public Payslip findPayslip(Payslip payslip, int month, int year, String fiscalCode){
+    //    return payslipRepository.findByEMA(payslip.getEmployee(),payslip.getMonth(),payslip.getYear());
+    //}
+
+    public void updatePayslip(Payslip payslip){
+        //Employee employee = employeeService.findOne(fiscalCode);
+        //int month = payslip.getMonth();
+        //int year = payslip.getYear();
+        //payslip = payslipRepository.findByEMA(employee,month,year);
+        payslip = payslipRepository.findByEMA(payslip.getEmployee(),payslip.getMonth(),payslip.getYear());
         payslipRepository.save(payslip);
     }
 
     public List<Payslip>findEmployeePayslips(Employee employee){
         return payslipRepository.findByEmployee(employee);
     }
+
+
+
 
 }
