@@ -21,13 +21,13 @@ public class PayslipController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/list")
-    public String listPayslip(Model model, String fiscalCode){
+    @GetMapping("/lista")
+    public String listaPayslip(Model model, String fiscalCode){
 
         Employee employee = employeeService.findOne(fiscalCode);
-        model.addAttribute("payslips", payslipService.findEmployeePayslips(employee));
-        System.out.println("ciao!!");
-        return "/home";
+        System.out.println(payslipService.findEmployeePayslips(employee));
+        payslipService.findEmployeePayslips(employee);
+        return "home";
     }
 
 }
