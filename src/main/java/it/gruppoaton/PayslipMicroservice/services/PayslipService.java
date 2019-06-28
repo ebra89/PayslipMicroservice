@@ -22,8 +22,8 @@ public class PayslipService {
         payslipRepository.save(payslip);
     }
 
-    public List<Payslip>findByFiscalCode(String fiscalCode){
-        return payslipRepository.findByFiscalCode(fiscalCode);
+    public List<Payslip>findEmployeePayslips(Employee employee){
+        return payslipRepository.findByEmployee(employee);
     }
 
 }

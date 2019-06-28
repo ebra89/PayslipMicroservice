@@ -7,17 +7,19 @@ import javax.validation.constraints.NotEmpty;
 public class Payslip {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private int idPayslip;
-    @ManyToOne
-    @JoinColumn(name = "employee_fiscal_code")
-    private Employee employee;
+
     @Lob
     private byte[] payslipPdf;
     @NotEmpty
     private int month;
     @NotEmpty
     private int year;
+
+    @ManyToOne
+    @JoinColumn(name = "FISCAL_CODE")
+    private Employee employee;
 
     public Payslip() {
     }
