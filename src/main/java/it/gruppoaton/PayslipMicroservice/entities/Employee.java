@@ -1,9 +1,12 @@
 package it.gruppoaton.PayslipMicroservice.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Entity
 public class Employee {
@@ -17,6 +20,9 @@ public class Employee {
     @Email
     @NotEmpty
     private String email;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<Payslip> payslips;
 
     public Employee() {
     }

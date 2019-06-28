@@ -10,6 +10,7 @@ public class Payslip {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int idPayslip;
     @ManyToOne
+    @JoinColumn(name = "employee_fiscal_code")
     private Employee employee;
     @Lob
     private byte[] payslipPdf;
