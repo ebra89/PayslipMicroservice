@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+<thead>
+<tr>
+    <th>year: </th>
+    <th>month: </th>
+    <th>id payslip: </th>
+</tr>
+</thead>
+
+ <tbody>
+ <tr th:each="payslip:${payslips}">
+    <td th:text="${payslip.year}"></td>
+    <td th:text="${payslip.month}"></td>
+    <td th:text="${payslip.idPayslip}"></td>
+
+ </tr>
+ </tbody>
+
+</body>
+</html>
