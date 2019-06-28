@@ -1,17 +1,27 @@
 package it.gruppoaton.PayslipMicroservice.entities;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+
+@Entity
 public class Payslip {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int idPayslip;
+    @ManyToOne
     private Employee employee;
-    private byte payslipPdf;
+    @Lob
+    private byte[] payslipPdf;
+    @NotEmpty
     private int month;
+    @NotEmpty
     private int year;
 
     public Payslip() {
     }
 
-    public Payslip(int idPayslip, Employee employee, byte payslipPdf, int month, int year) {
+    public Payslip(int idPayslip, Employee employee, byte[] payslipPdf, int month, int year) {
         this.idPayslip = idPayslip;
         this.employee = employee;
         this.payslipPdf = payslipPdf;
@@ -35,11 +45,11 @@ public class Payslip {
         this.employee = employee;
     }
 
-    public byte getPayslipPdf() {
+    public byte[] getPayslipPdf() {
         return payslipPdf;
     }
 
-    public void setPayslipPdf(byte payslipPdf) {
+    public void setPayslipPdf(byte[] payslipPdf) {
         this.payslipPdf = payslipPdf;
     }
 
