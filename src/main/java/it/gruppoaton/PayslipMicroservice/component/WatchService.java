@@ -1,4 +1,4 @@
-package it.gruppoaton.PayslipMicroservice.Component;
+package it.gruppoaton.PayslipMicroservice.component;
 
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ public class WatchService implements Runnable{
 
     @Override
     public void run(){
-        // creaiamo un oggeto path che contenga il percorso della directory da monitorare
+
 
         Path path = Paths.get("/home/andrea/Scrivania/WatchDir");
 
@@ -43,7 +43,10 @@ public class WatchService implements Runnable{
                     System.out.format("Creazione del file %s %n", fileName);
                     String fileNameString=fileName.toFile().getName();
                     String fiscalCode=fileNameString.substring(fileNameString.length()-17);
+                    int mounth = Integer.parseInt(fileNameString.substring(fileNameString.length()-19, fileNameString.length()-17));
+                    int year = Integer.parseInt(fileNameString.substring(fileNameString.length()-23, fileNameString.length()-19));
                     byte[] byteFile = Files.readAllBytes(fileName);
+
 
 
 
