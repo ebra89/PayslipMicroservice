@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,4 +98,27 @@ public class PayslipService {
         return payslipRepository.findByYear(year);
     }
 
-}
+    public List<Payslip>showLastSixMonthsPayslips(Payslip payslip){
+
+    	int month = payslip.getMonth();
+    	int year = payslip.getYear();
+
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    	String date = "01" + month + year;
+    	LocalDate payslipDate = LocalDate.parse(date, formatter);
+    	LocalDate currentDate = LocalDate.now();
+    	LocalDate sixMonthsBefore = LocalDate.now().minusDays(182);
+    	List<Payslip> lastPayslips = new ArrayList<Payslip>();
+
+    	while (payslipDate.isAfter(sixMonthsBefore)&&payslipDate.isBefore(currentDate)) {
+
+    		lastPayslips.add(payslip);
+    	}
+
+    	return lastPayslips;
+        }
+
+    }
+
+
