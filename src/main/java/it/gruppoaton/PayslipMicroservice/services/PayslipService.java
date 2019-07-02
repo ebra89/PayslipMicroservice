@@ -3,6 +3,8 @@ package it.gruppoaton.PayslipMicroservice.services;
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +25,46 @@ public class PayslipService {
     @Autowired
     private EmployeeService employeeService;
 
-    public Payslip storePayslip (File file)throws IOException{
+    public Payslip storePayslip (File file){
 
-                                    // da provare!!
+        //TODO
+                                                                                        // da provare!!
             byte[] fileByte = file.getPath().getBytes();
             String fileName =  file.getName();
             String fiscalCode = fileName.substring(fileName.length()- 16);
-           // Employee employee = employeeService.findOne(fiscalCode);
+            Employee employee = employeeService.findByFc(fiscalCode);
 
-           // Payslip payslipFile = new Payslip(1,employee,fileByte,6,2019);
-            //return payslipRepository.save(payslipFile);
-        return null;
+            int n=1;
+            int month=0;
+            int year=0;
+            String[] fileNameSep = StringUtils.split(fileName,"_");
+
+            try {
+                for (String s : fileNameSep){
+                    if(n == 3){
+                        month = Integer.parseInt(s);
+                    }
+                    if(n == 4){
+                        year = Integer.parseInt(s);
+                    }
+                    n++;
+                }
+                throw new  NumberFormatException();
+
+            }catch (NumberFormatException ex){
+                System.out.println(ex.toString());
+
+           }finally {
+                //todo
+            }
+            Payslip payslip = new Payslip(fileByte,month,year,employee);
+
+
+            return payslipRepository.save(payslip);
+
     }
 
-
-              // aggiunge un payslip a quell employee
+                                                                     // aggiunge un payslip a quell employee
     public void addPayslip(Payslip payslip, Employee employee){
         payslip.setEmployee(employee);
         payslipRepository.save(payslip);
@@ -47,7 +74,7 @@ public class PayslipService {
     //}
 
 
-                                     // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
+                                                                 // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
     public void updatePayslip(Payslip payslip){
         //Employee employee = employeeService.findOne(fiscalCode);
         //int month = payslip.getMonth();
@@ -57,17 +84,16 @@ public class PayslipService {
         payslipRepository.save(payslip);
     }
 
-                                       // trova tutti payslip del employye in questione
+                                                                         // trova tutti payslip del employye in questione
     public List<Payslip>findEmployeePayslips(Employee employee){
-
         return payslipRepository.findByEmployee(employee);
     }
 
-                                      // trova payslip con una ricerca su mese
-    public Payslip findByMonth(int month){
+                                                                            // trova payslip con una ricerca su mese
+    public Payslip findByMonth(int month) {
         return payslipRepository.findByMonth(month);
     }
-                                      // trova payslip con una ricerca su anno
+                                                                            // trova payslip con una ricerca su anno
     public Payslip findByYear(int year){
         return payslipRepository.findByYear(year);
     }
