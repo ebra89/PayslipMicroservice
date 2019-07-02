@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -64,14 +67,11 @@ public class PayslipMicroserviceApplicationTests {
 
 		LinkedList<String> list = new LinkedList<>();
 
-
-
 		System.out.println(seq);
 
-
-
-
 	}
+	Path pathFile = Paths.get("/home/ebrasupertramp/prova.pdf");
+
 
 
 
