@@ -22,9 +22,9 @@ public class PayslipController {
     private EmployeeService employeeService;
 
     @GetMapping("/lista")
-    public String listaPayslip(Model model, String fiscalCode){
+    public String listaPayslip(Model model, String firstName,String cognome){
 
-        Employee employee = employeeService.findOne(fiscalCode);
+        Employee employee = employeeService.findOne(firstName,cognome);
         System.out.println(payslipService.findEmployeePayslips(employee));
         payslipService.findEmployeePayslips(employee);
         return "home";
