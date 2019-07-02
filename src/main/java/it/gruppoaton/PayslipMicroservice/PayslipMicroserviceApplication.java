@@ -10,10 +10,8 @@ public class PayslipMicroserviceApplication {
 
 	public static void main(String[] args) {
 
-		//SpringApplication.run(PayslipMicroserviceApplication.class, args);
-		ConfigurableApplicationContext applicationContext=SpringApplication.run(PayslipMicroserviceApplication.class, args);
-		WatchService watchService=(WatchService) applicationContext.getBean("watchService");
-		Thread watchServiceThread=new Thread(watchService, "watch service demon");
+		SpringApplication.run(PayslipMicroserviceApplication.class, args);
+
 
 	}
 
