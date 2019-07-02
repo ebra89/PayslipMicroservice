@@ -63,4 +63,15 @@ public class Employee {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "fiscalCode='" + fiscalCode + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", payslips=" + payslips +
+                '}';
+    }
 }
