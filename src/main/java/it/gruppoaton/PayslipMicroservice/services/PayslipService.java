@@ -3,6 +3,8 @@ package it.gruppoaton.PayslipMicroservice.services;
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +23,45 @@ public class PayslipService {
 
     public Payslip storePayslip (File file)throws IOException{
 
+        //TODO
                                     // da provare!!
             byte[] fileByte = file.getPath().getBytes();
             String fileName =  file.getName();
             String fiscalCode = fileName.substring(fileName.length()- 16);
-           // Employee employee = employeeService.findOne(fiscalCode);
 
+            int n=1;
+            int month=0;
+            int year=0;
+            String[] fileNameSep = StringUtils.split(fileName,"_");
+
+            try {
+                for (String s : fileNameSep){
+                    if(n == 3){
+                        month = Integer.parseInt(s);
+                    }
+                    if(n == 4){
+                        year = Integer.parseInt(s);
+                    }
+                    n++;
+                }
+                throw new  NumberFormatException();
+
+            }catch (NumberFormatException ex){
+                System.out.println(ex.toString());
+
+           }finally {
+                //todo
+            }
+
+
+
+
+           // Employee employee = employeeService.findOne(fiscalCode);
            // Payslip payslipFile = new Payslip(1,employee,fileByte,6,2019);
             //return payslipRepository.save(payslipFile);
+
+
+
         return null;
     }
 
@@ -60,11 +93,13 @@ public class PayslipService {
     }
 
                                       // trova payslip con una ricerca su mese
-    public Payslip findByMonth(int month){
+    public Payslip findByMonth(int month) {
+
         return payslipRepository.findByMonth(month);
     }
                                       // trova payslip con una ricerca su anno
     public Payslip findByYear(int year){
+
         return payslipRepository.findByYear(year);
     }
 
