@@ -89,7 +89,6 @@ public class PayslipService {
     	while (payslipDate.isAfter(sixMonthsBefore)&&payslipDate.isBefore(currentDate)) {
     		
     		lastPayslips.add(payslip);
-    		
     	}
     	
     	return lastPayslips;
