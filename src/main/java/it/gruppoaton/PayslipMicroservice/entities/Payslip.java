@@ -20,7 +20,16 @@ public class Payslip {
     @ManyToOne
     private Employee employee;
 
+
+
     public Payslip() {
+    }
+
+    public Payslip(byte[] payslipPdf, int month, int year, Employee employee) {
+        this.payslipPdf = payslipPdf;
+        this.month = month;
+        this.year = year;
+        this.employee = employee;
     }
 
     public Payslip(int idPayslip, Employee employee, byte[] payslipPdf, int month, int year) {

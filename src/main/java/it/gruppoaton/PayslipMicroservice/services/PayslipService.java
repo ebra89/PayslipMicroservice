@@ -21,13 +21,14 @@ public class PayslipService {
     @Autowired
     private EmployeeService employeeService;
 
-    public Payslip storePayslip (File file)throws IOException{
+    public Payslip storePayslip (File file){
 
         //TODO
-                                    // da provare!!
+                                                                                        // da provare!!
             byte[] fileByte = file.getPath().getBytes();
             String fileName =  file.getName();
             String fiscalCode = fileName.substring(fileName.length()- 16);
+            Employee employee = employeeService.findByFc(fiscalCode);
 
             int n=1;
             int month=0;
@@ -52,21 +53,14 @@ public class PayslipService {
            }finally {
                 //todo
             }
+            Payslip payslip = new Payslip(fileByte,month,year,employee);
 
 
+            return payslipRepository.save(payslip);
 
-
-           // Employee employee = employeeService.findOne(fiscalCode);
-           // Payslip payslipFile = new Payslip(1,employee,fileByte,6,2019);
-            //return payslipRepository.save(payslipFile);
-
-
-
-        return null;
     }
 
-
-              // aggiunge un payslip a quell employee
+                                                                     // aggiunge un payslip a quell employee
     public void addPayslip(Payslip payslip, Employee employee){
         payslip.setEmployee(employee);
         payslipRepository.save(payslip);
@@ -76,7 +70,7 @@ public class PayslipService {
     //}
 
 
-                                     // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
+                                                                 // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
     public void updatePayslip(Payslip payslip){
         //Employee employee = employeeService.findOne(fiscalCode);
         //int month = payslip.getMonth();
@@ -86,20 +80,17 @@ public class PayslipService {
         payslipRepository.save(payslip);
     }
 
-                                       // trova tutti payslip del employye in questione
+                                                                         // trova tutti payslip del employye in questione
     public List<Payslip>findEmployeePayslips(Employee employee){
-
         return payslipRepository.findByEmployee(employee);
     }
 
-                                      // trova payslip con una ricerca su mese
+                                                                            // trova payslip con una ricerca su mese
     public Payslip findByMonth(int month) {
-
         return payslipRepository.findByMonth(month);
     }
-                                      // trova payslip con una ricerca su anno
+                                                                            // trova payslip con una ricerca su anno
     public Payslip findByYear(int year){
-
         return payslipRepository.findByYear(year);
     }
 

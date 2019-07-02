@@ -17,11 +17,16 @@ public class EmployeeService {
         return employeeRepository.findOne(firstName,lastName);
     }
 
+    public Employee findByFc(String fiscalCode){
+        return employeeRepository.findOneByFC(fiscalCode);
+    }
+
     public void createEmployee(Employee employee){
         employeeRepository.save(employee);
     }
 
     public List<Employee> employeeList(){
-       return employeeRepository.findAll();
+
+        return employeeRepository.findAll();
     }
 }
