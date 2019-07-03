@@ -1,5 +1,7 @@
 package it.gruppoaton.PayslipMicroservice.component;
 
+import it.gruppoaton.PayslipMicroservice.services.PayslipService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -8,12 +10,15 @@ import java.util.List;
 
 @Component
 public class WatchService implements Runnable{
+    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
 
     @Override
     public void run(){
 
 
-        Path path = Paths.get("/home/andrea/Scrivania/WatchDir");
+        Path path = Paths.get(OBSERVED_FOLDER);
+        @Autowired
+        PayslipService payslipService;
 
         try{
             java.nio.file.WatchService watcher = FileSystems.getDefault().newWatchService();
@@ -41,16 +46,16 @@ public class WatchService implements Runnable{
                 }
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
-                    String fileNameString=fileName.toFile().getName();
-                    String fiscalCode=fileNameString.substring(fileNameString.length()-17);
-                    int month = Integer.parseInt(fileNameString.substring(fileNameString.length()-19, fileNameString.length()-17));
-                    int year = Integer.parseInt(fileNameString.substring(fileNameString.length()-23, fileNameString.length()-19));
-                    byte[] byteFile = Files.readAllBytes(fileName);
+                    payslipService.storePayslip(OBSERVED_FOLDER+fileName);
 
 
 
 
-                }
+
+
+
+
+                    }
                 if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
                     System.out.format("cancellazione del file %s %n", fileName);
                 }
