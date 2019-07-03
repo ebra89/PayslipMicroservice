@@ -10,15 +10,19 @@ import java.util.List;
 
 @Component
 public class WatchService implements Runnable{
+
+    @Autowired
+    PayslipService payslipService;
+
     public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
+
 
     @Override
     public void run(){
 
 
         Path path = Paths.get(OBSERVED_FOLDER);
-        @Autowired
-        PayslipService payslipService;
+
 
         try{
             java.nio.file.WatchService watcher = FileSystems.getDefault().newWatchService();
@@ -44,24 +48,19 @@ public class WatchService implements Runnable{
                 if (kind == StandardWatchEventKinds.OVERFLOW) {
                     continue;
                 }
+
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
-                    payslipService.storePayslip(OBSERVED_FOLDER+fileName);
+                 }
 
-
-
-
-
-
-
-
-                    }
                 if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
                     System.out.format("cancellazione del file %s %n", fileName);
                 }
+
                 if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
                     System.out.format("il file %s è stato modificato %n", fileName);
                 }
+
                 boolean valid = key.reset();
                 if (!valid) {
                     break;
