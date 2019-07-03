@@ -12,9 +12,9 @@ public class Payslip {
 
     @Lob
     private byte[] payslipPdf;
-    @NotEmpty
+
     private int month;
-    @NotEmpty
+
     private int year;
 
     @ManyToOne

@@ -6,7 +6,10 @@ import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.File;
+
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,14 +24,18 @@ public class PayslipService {
     @Autowired
     private EmployeeService employeeService;
 
-    public Payslip storePayslip (File file){
+    public void storePayslip (String path) throws FileNotFoundException {
 
         //TODO
-                                                                                        // da provare!!
-            byte[] fileByte = file.getPath().getBytes();
+        // da provare!!
+
+            File file = new File(path);
             String fileName =  file.getName();
-            String fiscalCode = fileName.substring(fileName.length()- 16);
-            Employee employee = employeeService.findByFc(fiscalCode);
+            String fiscalCode = fileName.substring(fileName.length()- 20, fileName.length()- 4);
+
+
+            byte fileContent [] = new byte[(int)file.length()];
+            FileInputStream fis = null;
 
             int n=1;
             int month=0;
@@ -45,19 +52,35 @@ public class PayslipService {
                     }
                     n++;
                 }
-                throw new  NumberFormatException();
-
             }catch (NumberFormatException ex){
                 System.out.println(ex.toString());
 
            }finally {
                 //todo
             }
-            Payslip payslip = new Payslip(fileByte,month,year,employee);
+            try{
+                fis = new FileInputStream(file);
+                fis.read(fileContent);
 
 
-            return payslipRepository.save(payslip);
+            }catch (FileNotFoundException ex){
+                throw new FileNotFoundException();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }finally {
 
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        Employee employee = employeeService.findByFc(fiscalCode);
+
+        Payslip payslip = new Payslip(fileContent,month,year,employee);
+        payslipRepository.save(payslip);
     }
 
                                                                      // aggiunge un payslip a quell employee
@@ -105,7 +128,7 @@ public class PayslipService {
     	LocalDate payslipDate = LocalDate.parse(date, formatter);
     	LocalDate currentDate = LocalDate.now();
     	LocalDate sixMonthsBefore = LocalDate.now().minusDays(182);
-    	List<Payslip> lastPayslips = new ArrayList<Payslip>();
+    	List<Payslip> lastPayslips = new ArrayList<>();
 
     	while (payslipDate.isAfter(sixMonthsBefore)&&payslipDate.isBefore(currentDate)) {
 
