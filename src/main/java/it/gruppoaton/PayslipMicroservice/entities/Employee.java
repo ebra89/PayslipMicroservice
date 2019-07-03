@@ -19,7 +19,7 @@ public class Employee {
     @NotEmpty
     private String email;
 
-    @OneToMany(mappedBy = "employee" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "employee" , cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<Payslip> payslips;
 
     public Employee() {

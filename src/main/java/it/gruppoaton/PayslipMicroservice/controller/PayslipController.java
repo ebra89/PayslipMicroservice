@@ -27,6 +27,8 @@ public class PayslipController {
         Employee employee = employeeService.findOne(firstName,cognome);
         System.out.println(payslipService.findEmployeePayslips(employee));
         payslipService.findEmployeePayslips(employee);
+        System.out.println(employeeService.findByFc("1234567890123456"));
+
         return "home";
     }
 

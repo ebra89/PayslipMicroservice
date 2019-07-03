@@ -28,11 +28,12 @@ public class PayslipMicroserviceApplicationTests {
 
 	@Before
 	public void initDb() {
-		Employee employee1 = new Employee("2345678", "pippo", "pappo", "pippo@gmail.com");
+		Employee employee1 = new Employee("123456789123456o", "pippo", "pappo", "pippo@gmail.com");
 		employeeService.createEmployee(employee1);
 
 		Employee employee2 = new Employee("23456876", "giggio", "giggi", "giggio@gmail.com");
 		employeeService.createEmployee(employee2);
+
 
 
 
@@ -62,6 +63,8 @@ public class PayslipMicroserviceApplicationTests {
 			n++;
 		}
 		System.out.println("mese "+ mese + " anno"+anno);
+
+		System.out.println(employeeService.findByFc("1234567890123456"));
 
 		LinkedList<String> list = new LinkedList<>();
 

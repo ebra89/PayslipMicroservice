@@ -31,8 +31,8 @@ public class PayslipService {
 
             File file = new File(path);
             String fileName =  file.getName();
-            String fiscalCode = fileName.substring(fileName.length()- 16);
-            Employee employee = employeeService.findByFc(fiscalCode);
+            String fiscalCode = fileName.substring(fileName.length()- 20, fileName.length()- 4);
+
 
             byte fileContent [] = new byte[(int)file.length()];
             FileInputStream fis = null;
@@ -52,8 +52,6 @@ public class PayslipService {
                     }
                     n++;
                 }
-                throw new  NumberFormatException();
-
             }catch (NumberFormatException ex){
                 System.out.println(ex.toString());
 
@@ -79,6 +77,7 @@ public class PayslipService {
                     }
                 }
             }
+        Employee employee = employeeService.findByFc(fiscalCode);
 
         Payslip payslip = new Payslip(fileContent,month,year,employee);
         payslipRepository.save(payslip);

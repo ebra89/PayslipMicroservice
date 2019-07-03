@@ -1,5 +1,6 @@
 package it.gruppoaton.PayslipMicroservice.component;
 
+import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 
-@Component
+@Component("watchService")
 public class WatchService implements Runnable{
 
     @Autowired
@@ -20,18 +21,13 @@ public class WatchService implements Runnable{
     @Override
     public void run(){
 
-
         Path path = Paths.get(OBSERVED_FOLDER);
-
 
         try{
             java.nio.file.WatchService watcher = FileSystems.getDefault().newWatchService();
             WatchKey key = path.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE,
                     StandardWatchEventKinds.ENTRY_MODIFY);
-
-
-
         while(true) {
 
             try {
@@ -51,6 +47,11 @@ public class WatchService implements Runnable{
 
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
+                    try {
+                        payslipService.storePayslip(OBSERVED_FOLDER+fileName);
+                    }catch (Exception ex){
+                        System.out.println(ex.getMessage()+" eccezione ");
+                    }
                  }
 
                 if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
