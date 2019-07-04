@@ -21,7 +21,6 @@ public class EmployeeService {
 
 
     public Employee findByFc(String fiscalCode){
-
         return employeeRepository.findOneByFC(fiscalCode);
     }
 
@@ -32,4 +31,6 @@ public class EmployeeService {
     public List<Employee> employeeList(){
         return employeeRepository.findAll();
     }
+
+
 }

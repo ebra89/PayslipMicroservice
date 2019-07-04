@@ -136,4 +136,10 @@ public class PayslipService {
     	}
     	return lastPayslips;
         }
+        public List<Payslip> payslipsList() {
+            return payslipRepository.findAll();
+
+
+        }
+
     }
