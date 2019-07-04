@@ -1,7 +1,6 @@
 package it.gruppoaton.PayslipMicroservice.entities;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 
 @Entity
 public class Payslip {

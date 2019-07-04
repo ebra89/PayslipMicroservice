@@ -1,6 +1,5 @@
 package it.gruppoaton.PayslipMicroservice.component;
 
-import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,5 +1,6 @@
 package it.gruppoaton.PayslipMicroservice.services;
 
+import it.gruppoaton.PayslipMicroservice.component.EmailService;
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
@@ -7,9 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,6 +24,9 @@ public class PayslipService {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private EmailService emailService;
+
     public void storePayslip (String path) throws FileNotFoundException {
 
         //TODO
@@ -32,7 +35,6 @@ public class PayslipService {
             File file = new File(path);
             String fileName =  file.getName();
             String fiscalCode = fileName.substring(fileName.length()- 20, fileName.length()- 4);
-
 
             byte fileContent [] = new byte[(int)file.length()];
             FileInputStream fis = null;
@@ -55,13 +57,12 @@ public class PayslipService {
             }catch (NumberFormatException ex){
                 System.out.println(ex.toString());
 
-           }finally {
+            }finally {
                 //todo
             }
             try{
                 fis = new FileInputStream(file);
                 fis.read(fileContent);
-
 
             }catch (FileNotFoundException ex){
                 throw new FileNotFoundException();
@@ -78,19 +79,16 @@ public class PayslipService {
                 }
             }
         Employee employee = employeeService.findByFc(fiscalCode);
-
         Payslip payslip = new Payslip(fileContent,month,year,employee);
         payslipRepository.save(payslip);
-    }
 
-                                                                     // aggiunge un payslip a quell employee
-    public void addPayslip(Payslip payslip, Employee employee){
-        payslip.setEmployee(employee);
-        payslipRepository.save(payslip);
+        try {
+            emailService.sendEmail(employee, "nuovo cedolino","hai un nuovo cedolino!");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
     }
-    //public Payslip findPayslip(Payslip payslip, int month, int year, String fiscalCode){
-    //    return payslipRepository.findByEMA(payslip.getEmployee(),payslip.getMonth(),payslip.getYear());
-    //}
 
 
                                                                  // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
@@ -110,10 +108,12 @@ public class PayslipService {
 
                                                                             // trova payslip con una ricerca su mese
     public Payslip findByMonth(int month) {
+
         return payslipRepository.findByMonth(month);
     }
                                                                             // trova payslip con una ricerca su anno
     public Payslip findByYear(int year){
+
         return payslipRepository.findByYear(year);
     }
 
