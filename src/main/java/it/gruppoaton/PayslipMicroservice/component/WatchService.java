@@ -14,7 +14,7 @@ public class WatchService implements Runnable{
     @Autowired
     PayslipService payslipService;
 
-    public static final String OBSERVED_FOLDER = "/home/andrea/Scrivania/WatchDir/";
+    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
 
 
     @Override
