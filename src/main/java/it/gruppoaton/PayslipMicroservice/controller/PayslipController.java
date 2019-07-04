@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/payslips")
 public class PayslipController {
 
     @Autowired
@@ -21,12 +24,17 @@ public class PayslipController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/payslip")
-    public String listaPayslip(Model model){
+    @GetMapping("/")
+    public String listPayslips(Model model){
         List<Payslip> payslips = new ArrayList<Payslip>();
-        //Employee employee = employeeService.findOne(firstName,cognome);
-        //payslips = payslipService.findEmployeePayslips(employee);
         payslips=payslipService.payslipsList();
+        model.addAttribute("payslips", payslips);
+        return "payslip";
+    }
+    @GetMapping("/{fiscalCode}")
+    public String listPayslipsEmployee(Model model, @PathVariable("fiscalCode") String fiscalCode){
+        List<Payslip> payslips = new ArrayList<Payslip>();
+        payslips=payslipService.findEmployeePayslips(employeeService.findByFc(fiscalCode));
         model.addAttribute("payslips", payslips);
         return "payslip";
     }

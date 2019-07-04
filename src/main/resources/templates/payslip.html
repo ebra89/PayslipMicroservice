@@ -21,8 +21,8 @@
     </thead>
     <tbody>
         <tr th:each="payslip:${payslips}">
-            <td th:text="${payslip.employee.name}"></td>
-            <td th:text="${payslip.employee.cognome}"></td>
+            <td th:text="${payslip.employee.firstName}"></td>
+            <td th:text="${payslip.employee.lastName}"></td>
             <td th:text="${payslip.employee.fiscalCode}"></td>
             <td th:text="${payslip.year}"></td>
             <td th:text="${payslip.month}"></td>
