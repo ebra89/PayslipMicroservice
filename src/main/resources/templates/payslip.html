@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" >
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Home</title>
 </head>
 <body>
 
+
+<table>
+    <thead>
+        <tr>
+            <th>Nome </th>
+            <th>Cognome </th>
+            <th>Codice fiscale </th>
+            <th>year </th>
+            <th>month </th>
+            <th>id payslip </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="payslip:${payslips}">
+            <td th:text="${payslip.employee.name}"></td>
+            <td th:text="${payslip.employee.cognome}"></td>
+            <td th:text="${payslip.employee.fiscalCode}"></td>
+            <td th:text="${payslip.year}"></td>
+            <td th:text="${payslip.month}"></td>
+            <td th:text="${payslip.idPayslip}"></td>
+
+        </tr>
+    </tbody>
+</table>
 </body>
 </html>
