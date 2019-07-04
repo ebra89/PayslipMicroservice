@@ -17,12 +17,12 @@ public class PayslipController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/lista")
+    @GetMapping("/payslip")
     public String listaPayslip(Model model, String firstName,String cognome){
 
         Employee employee = employeeService.findOne(firstName,cognome);
         payslipService.findEmployeePayslips(employee);
-        return "home";
+        return "payslip";
     }
 
 }
