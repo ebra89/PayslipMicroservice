@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class EmployeeController {
@@ -16,18 +17,23 @@ public class EmployeeController {
     @Autowired
     private PayslipService payslipService;
 
-    @GetMapping("/employeeList")
+
+    @GetMapping("/employeesList")
     public String employeeList(Model model){
         model.addAttribute("employees",employeeService.employeeList());
-        //System.out.println(employeeService.employeeList());
-        //System.out.println(employeeService.findOne("2345678"));
         return "employeeListPage";
     }
 
-    @GetMapping("/employeeFindOne")
-    public String findOne(Model model,String firstName,String lastName){
-        model.addAttribute("employee",employeeService.findOne(firstName,lastName));
-        System.out.println(employeeService.findOne("pippo","pappo"));
+
+
+
+
+
+
+
+    @GetMapping("/employees")
+    public String findByName(Model model, @RequestParam(defaultValue = "") String firstName){
+        model.addAttribute("employees",employeeService.findByName(firstName));
         return "employeeListPage";
     }
 }

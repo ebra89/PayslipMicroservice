@@ -13,9 +13,12 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public Employee findOne(String firstName, String lastName){
-        return employeeRepository.findOne(firstName,lastName);
+
+    public List<Employee> findByName(String firstName){
+        return employeeRepository.findByNameLike("%"+firstName+"%");
     }
+
+
 
     public Employee findByFc(String fiscalCode){
         return employeeRepository.findOneByFC(fiscalCode);
