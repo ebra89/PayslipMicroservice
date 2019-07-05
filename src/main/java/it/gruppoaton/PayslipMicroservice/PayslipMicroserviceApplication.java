@@ -16,6 +16,8 @@ public class PayslipMicroserviceApplication {
 		Buffer buffer = (Buffer)applicationContext.getBean("buffer");
 		EmailService emailService=(EmailService) applicationContext.getBean("emailService");
 		WatchService watchService=(WatchService) applicationContext.getBean("watchService");
+		emailService.run();
+		watchService.run();
 
 	}
 

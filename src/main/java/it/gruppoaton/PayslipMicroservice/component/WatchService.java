@@ -16,12 +16,10 @@ public class WatchService implements Runnable{
     @Autowired
     Buffer buffer;
 
-
-
     @Autowired
     PayslipService payslipService;
 
-    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir";
+    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir";
 
 
     @Override
@@ -35,7 +33,7 @@ public class WatchService implements Runnable{
                     StandardWatchEventKinds.ENTRY_DELETE,
                     StandardWatchEventKinds.ENTRY_MODIFY);
         while(true) {
-
+            System.out.println("watch service partit");
             try {
                 key = watcher.take();
             } catch (InterruptedException e) {
