@@ -35,14 +35,25 @@ public class PayslipMicroserviceApplicationTests {
 		employeeService.createEmployee(employee2);
 
 
+		String prova = "ebrahim_fazeli_deeee_eeee_10_2019-1-2_Maggio_123456789123423w";
 
+		String[] tokens = StringUtils.split(prova, "_-.");
+		LinkedList<Integer> i=new LinkedList<>();
 
+		int n=0;
+		for(String s:tokens){
 
+			try {
+				i.add(Integer.parseInt(s));
+				n++;
 
-		String prova = "ebrahim_fazeli_04_2019_123456789123423w";
+			}catch (Exception e) {
 
-		String month = StringUtils.substringBetween(prova,"_","_");
-		//if(StringUtils.isNumeric(month)){
+			}
+		}
+		System.out.println("mese "+i.get(0)+" anno"+i.get(1));
+
+		/*//if(StringUtils.isNumeric(month)){
 			System.out.println(month);
 		//}else{
 		//	StringUtils.
@@ -73,6 +84,9 @@ public class PayslipMicroserviceApplicationTests {
 	}
 	Path pathFile = Paths.get("/home/ebrasupertramp/prova.pdf");
 
+
+		 */
+	}
 
 
 
