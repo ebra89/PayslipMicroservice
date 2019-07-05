@@ -27,6 +27,7 @@
             <td th:text="${payslip.year}"></td>
             <td th:text="${payslip.month}"></td>
             <td th:text="${payslip.idPayslip}"></td>
+            <td><a th:link=/payslips/download/"${payslip.idPayslip}">dowload</a></td>
 
         </tr>
     </tbody>

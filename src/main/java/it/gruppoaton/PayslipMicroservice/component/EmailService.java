@@ -3,6 +3,7 @@ package it.gruppoaton.PayslipMicroservice.component;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,26 +15,57 @@ import it.gruppoaton.PayslipMicroservice.entities.Employee;
 
 
 @Component
-public class EmailService {
+public class EmailService implements Runnable{
+
+
+	private Buffer buffer;
+
+	public EmailService(Buffer buffer) {
+		this.buffer = buffer;
+	}
 
 	@Autowired
 	private JavaMailSender javaMailSender;
 		
-		public void sendEmail(Employee employee,String subject, String body) throws MailException, MessagingException {
 
 
+	@Override
+	public void run() {
+
+		while(true){
+			Employee employee=buffer.takeEmail().getEmployee();
+			String subject=buffer.takeEmail().getSubject();
+			String body=buffer.takeEmail().getBody();
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
 			JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+			MimeMessageHelper helper = null;
+			try {
+				helper = new MimeMessageHelper(mimeMessage, true);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
 
-			helper.setTo(employee.getEmail());
-			helper.setSubject(subject);
-			helper.setText(body);
+			try {
+				helper.setTo(employee.getEmail());
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			try {
+				helper.setSubject(subject);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			try {
+				helper.setText(body);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
 
 			javaMailSender.send(mimeMessage);
-			
+
 		}
 
+	}
 }
