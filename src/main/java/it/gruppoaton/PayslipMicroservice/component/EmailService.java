@@ -17,10 +17,12 @@ import it.gruppoaton.PayslipMicroservice.entities.Employee;
 @Component("emailService")
 public class EmailService implements Runnable{
 
-    @Autowired
+
 	private Buffer buffer;
 
-
+	public EmailService(Buffer buffer) {
+		this.buffer = buffer;
+	}
 
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -29,6 +31,7 @@ public class EmailService implements Runnable{
 
 	@Override
 	public void run() {
+		System.out.println("email service partito");
 
 		while(true){
 			Employee employee=buffer.takeEmail().getEmployee();

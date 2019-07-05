@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 
-@Component("buffer")
+@Component
 public class Buffer {
 
     private LinkedList<Email> coda= new LinkedList<>();
