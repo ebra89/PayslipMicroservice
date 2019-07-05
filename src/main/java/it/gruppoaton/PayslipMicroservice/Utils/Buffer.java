@@ -1,16 +1,18 @@
 package it.gruppoaton.PayslipMicroservice.Utils;
 
 import it.gruppoaton.PayslipMicroservice.model.Email;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 
+@Component
 public class Buffer {
 
-    LinkedList<Email> coda= new LinkedList<>();
-    int sizeMax;
+    private LinkedList<Email> coda= new LinkedList<>();
+    private static final int sizeMax=100;
 
-    public Buffer(int sizeMax) {
-        this.sizeMax = sizeMax;
+    public Buffer() {
+
     }
 
     public boolean isFull(){

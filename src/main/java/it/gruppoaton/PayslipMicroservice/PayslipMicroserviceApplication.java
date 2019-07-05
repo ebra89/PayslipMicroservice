@@ -13,9 +13,9 @@ public class PayslipMicroserviceApplication {
 	public static void main(String[] args) {
 
 		ConfigurableApplicationContext applicationContext = SpringApplication.run(PayslipMicroserviceApplication.class, args);
-		//WatchService watchService = (WatchService)applicationContext.getBean("watchService");
+		Buffer buffer = (Buffer)applicationContext.getBean("buffer");
 		//watchService.run();
-		Buffer buffer =new Buffer(100);
+
 		Thread emailService=new Thread(new EmailService(buffer));
 		Thread watchService=new Thread(new WatchService(buffer));
 
