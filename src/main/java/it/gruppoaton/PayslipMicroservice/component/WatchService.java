@@ -23,7 +23,7 @@ public class WatchService implements Runnable{
         this.buffer = buffer;
     }
 
-    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir";
+    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir";
 
 
     @Override
