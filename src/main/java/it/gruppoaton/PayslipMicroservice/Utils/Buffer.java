@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 
-@Component
+@Component("buffer")
 public class Buffer {
 
     private LinkedList<Email> coda= new LinkedList<>();
-    private static final int sizeMax=100;
+    private  int sizeMax=100;
 
     public Buffer() {
 
