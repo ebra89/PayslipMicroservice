@@ -19,7 +19,11 @@ public class WatchService implements Runnable{
     @Autowired
     PayslipService payslipService;
 
-    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir";
+    public WatchService(Buffer buffer) {
+        this.buffer = buffer;
+    }
+
+    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir";
 
 
     @Override
