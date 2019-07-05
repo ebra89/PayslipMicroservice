@@ -11,11 +11,12 @@ import java.util.List;
 
 @Component("watchService")
 public class WatchService implements Runnable{
+
+
+    @Autowired
     Buffer buffer;
 
-    public WatchService(Buffer buffer) {
-        this.buffer = buffer;
-    }
+
 
     @Autowired
     PayslipService payslipService;

@@ -14,15 +14,13 @@ import org.springframework.stereotype.Component;
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 
 
-@Component
+@Component("emailService")
 public class EmailService implements Runnable{
 
-
+    @Autowired
 	private Buffer buffer;
 
-	public EmailService(Buffer buffer) {
-		this.buffer = buffer;
-	}
+
 
 	@Autowired
 	private JavaMailSender javaMailSender;
