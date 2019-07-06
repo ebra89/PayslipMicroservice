@@ -1,19 +1,19 @@
 package it.gruppoaton.PayslipMicroservice.services;
 
-import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
 import it.gruppoaton.PayslipMicroservice.component.EmailService;
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
-import it.gruppoaton.PayslipMicroservice.model.Email;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -28,7 +28,7 @@ public class PayslipService {
     @Autowired
     private EmailService emailService;
 
-    public void storePayslip (String path, Buffer buffer) throws FileNotFoundException {
+    public void storePayslip (String path) throws FileNotFoundException {
 
         //TODO
         // da provare!!
@@ -40,50 +40,52 @@ public class PayslipService {
             byte fileContent [] = new byte[(int)file.length()];
             FileInputStream fis = null;
 
-            int n=1;
+            int n=0;
             int month=0;
             int year=0;
-            String[] fileNameSep = StringUtils.split(fileName,"_");
+            String[] tokens = StringUtils.split(fileName,"_-.");
+            LinkedList<Integer> i=new LinkedList<>();
+
+            for(String s : tokens){
+                try {
+                    i.add(Integer.parseInt(s));
+                }catch (Exception ex){
+                    System.out.println(ex.getStackTrace());
+                }
+                n++;
+            }
+
+            System.out.println("Mese: "+i.get(0));
+            System.out.println("anno: "+i.get(1));
+            month = i.get(0);
+            year = i.get(1);
 
             try {
-                for (String s : fileNameSep){
-                    if(n == 3){
-                        month = Integer.parseInt(s);
-                    }
-                    if(n == 4){
-                        year = Integer.parseInt(s);
-                    }
-                    n++;
-                }
-            }catch (NumberFormatException ex){
-                System.out.println(ex.toString());
-
-            }finally {
-                //todo
-            }
-            try{
                 fis = new FileInputStream(file);
                 fis.read(fileContent);
-
             }catch (FileNotFoundException ex){
-                throw new FileNotFoundException();
-            }catch (IOException e) {
+                ex.printStackTrace();
+            }catch (IOException e){
                 e.printStackTrace();
             }finally {
-
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-        Employee employee = employeeService.findByFc(fiscalCode);
-        Payslip payslip = new Payslip(fileContent,month,year,employee);
-        payslipRepository.save(payslip);
-        Email email=new Email(employee, " oggetto", "nuovo cedolino caricato" );
-        buffer.putEmail(email);
+
+            Employee employee = employeeService.findByFc(fiscalCode);
+            System.out.println("employee: "+employee);
+            System.out.println("employee mail: "+employeeService.findByFc(fiscalCode));
+            Payslip payslip = new Payslip(fileContent,month,year,employee);
+            payslipRepository.save(payslip);
+
+            try {
+                emailService.sendEmail(employee, "nuovo cedolino","hai un nuovo cedolino!");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
 
     }
 
