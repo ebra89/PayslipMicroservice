@@ -14,58 +14,53 @@ import it.gruppoaton.PayslipMicroservice.entities.Employee;
 
 
 @Component("emailService")
-public class EmailService implements Runnable{
-
+public class EmailService implements Runnable {
 
 	private Buffer buffer;
 
-	public EmailService(Buffer buffer) {
+	public EmailService(Buffer buffer){
 		this.buffer = buffer;
 	}
 
 	@Autowired
 	private JavaMailSender javaMailSender;
 		
+			@Override
+			public void run(){
 
+				System.out.println("email partito!!");
 
-	@Override
-	public void run() {
-		System.out.println("email service partito");
+				while (true){
+					Employee employee = buffer.takeEmail().getEmployee();
+					String subject = buffer.takeEmail().getSubject();
+					String body = buffer.takeEmail().getBody();
 
-		while(true){
-			Employee employee=buffer.takeEmail().getEmployee();
-			String subject=buffer.takeEmail().getSubject();
-			String body=buffer.takeEmail().getBody();
-			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+					MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+					JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-			JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-
-			MimeMessageHelper helper = null;
-			try {
-				helper = new MimeMessageHelper(mimeMessage, true);
-			} catch (MessagingException e) {
-				e.printStackTrace();
+					MimeMessageHelper helper = null;
+					try {
+						helper = new MimeMessageHelper(mimeMessage,true);
+					}catch (MessagingException e){
+						e.printStackTrace();
+					}
+					try {
+						helper.setTo(employee.getEmail());
+					}catch (MessagingException e){
+						e.printStackTrace();
+					}
+					try {
+						helper.setSubject(subject);
+					}catch (MessagingException e){
+						e.printStackTrace();
+					}
+					try {
+						helper.setText(body);
+					}catch (MessagingException e){
+						e.printStackTrace();
+					}
+					javaMailSender.send(mimeMessage);
+				}
 			}
 
-			try {
-				helper.setTo(employee.getEmail());
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			}
-			try {
-				helper.setSubject(subject);
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			}
-			try {
-				helper.setText(body);
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			}
-
-			javaMailSender.send(mimeMessage);
-
-		}
-
-	}
 }

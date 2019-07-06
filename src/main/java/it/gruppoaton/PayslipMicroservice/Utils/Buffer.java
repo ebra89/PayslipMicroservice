@@ -8,41 +8,35 @@ import java.util.LinkedList;
 @Component
 public class Buffer {
 
-    private LinkedList<Email> coda= new LinkedList<>();
-    private  int sizeMax=100;
+    private LinkedList<Email> coda = new LinkedList<>();
+    private int sizeMax= 100;
 
-    public Buffer() {
+    public Buffer(){
 
     }
-
     public boolean isFull(){
-
-        return coda.size()>=sizeMax;
+        return coda.size() >= sizeMax;
     }
-
     public boolean isEmpty(){
-        return  coda.isEmpty();
+        return coda.isEmpty();
     }
-
     public synchronized Email takeEmail(){
-
-        while(isEmpty()){
+        while (isEmpty()){
             try {
                 wait();
-            } catch (InterruptedException e) {
+            }catch (InterruptedException e){
                 e.printStackTrace();
             }
         }
         Email email = coda.removeFirst();
         notifyAll();
         return email;
-
     }
     public synchronized void putEmail(Email email){
-        while(isFull()){
+        while (isFull()){
             try {
                 wait();
-            } catch (InterruptedException e) {
+            }catch (InterruptedException e){
                 e.printStackTrace();
             }
         }

@@ -1,8 +1,10 @@
 package it.gruppoaton.PayslipMicroservice.services;
 
+import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
 import it.gruppoaton.PayslipMicroservice.component.EmailService;
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
+import it.gruppoaton.PayslipMicroservice.model.Email;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class PayslipService {
     @Autowired
     private EmailService emailService;
 
-    public void storePayslip (String path) throws FileNotFoundException {
+    public void storePayslip (String path, Buffer buffer) throws FileNotFoundException {
 
         //TODO
         // da provare!!
@@ -81,13 +83,10 @@ public class PayslipService {
             Payslip payslip = new Payslip(fileContent,month,year,employee);
             payslipRepository.save(payslip);
 
-            try {
-                emailService.sendEmail(employee, "nuovo cedolino","hai un nuovo cedolino!");
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
+            Email email = new Email(employee, "nuovo cedolino","hai un nuovo cedolino!");
+            buffer.putEmail(email);
 
-    }
+            }
 
 
                                                                  // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna

@@ -1,5 +1,6 @@
 package it.gruppoaton.PayslipMicroservice.component;
 
+import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,14 +12,25 @@ import java.util.List;
 @Component("watchService")
 public class WatchService implements Runnable{
 
+
+
     @Autowired
-    PayslipService payslipService;
+    private PayslipService payslipService;
+
+    @Autowired
+    private Buffer buffer;
+
+    public WatchService(Buffer buffer){
+        this.buffer = buffer;
+    }
 
     public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
 
 
     @Override
     public void run(){
+
+        System.out.println("watcher partito!!");
 
         Path path = Paths.get(OBSERVED_FOLDER);
 
@@ -47,7 +59,7 @@ public class WatchService implements Runnable{
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
                     try {
-                        payslipService.storePayslip(OBSERVED_FOLDER+fileName);
+                        payslipService.storePayslip(OBSERVED_FOLDER+fileName, buffer);
                     }catch (Exception ex){
                         System.out.println(ex.getMessage()+" eccezione ");
                     }
