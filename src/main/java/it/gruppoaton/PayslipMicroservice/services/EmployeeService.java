@@ -28,9 +28,8 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
-    public List<Employee> employeeList(){
+
+    public List<Employee> getAll() {
         return employeeRepository.findAll();
     }
-
-
 }
