@@ -1,16 +1,17 @@
 package it.gruppoaton.PayslipMicroservice.controller;
 
+import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequestMapping("/employees")
 public class EmployeeController {
 
@@ -22,16 +23,22 @@ public class EmployeeController {
 
 
     @GetMapping("/list")
-    public String employeeList(Model model){
-        model.addAttribute("employees",employeeService.employeeList());
-        return "employeeListPage";
+    public List<Employee>employees(){
+       return employeeService.getAll();
     }
 
 
-    @GetMapping("/employeesByName")
-    public String findByName(Model model, @RequestParam(defaultValue = "") String firstName){
-        model.addAttribute("employees",employeeService.findByName(firstName));
-        return "employeeListPage";
+    @GetMapping("/{nameLastName}")
+    public List<Employee> employeeByNameLastName(@PathVariable("nameLastName") String nameLastName){
+        return employeeService.findByName(nameLastName);
+    }
+
+    @GetMapping("/{fiscalCode}")
+    public Employee employeeByFiscalCode(@PathVariable ("fiscalCode") String fiscalCode, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            System.out.println("Utente con questo codice fiscale non esiste");
+        }
+        return employeeService.findByFc(fiscalCode);
     }
 
 

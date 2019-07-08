@@ -77,6 +77,9 @@ public class PayslipService {
                 }
             }
 
+
+            System.out.println(employeeService.findByFc(fiscalCode));
+
             Employee employee = employeeService.findByFc(fiscalCode);
             System.out.println("employee: "+employee);
             System.out.println("employee mail: "+employeeService.findByFc(fiscalCode));

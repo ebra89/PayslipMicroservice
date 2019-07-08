@@ -55,11 +55,11 @@ public class WatchService implements Runnable{
                 if (kind == StandardWatchEventKinds.OVERFLOW) {
                     continue;
                 }
-
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
                     try {
-                        payslipService.storePayslip(OBSERVED_FOLDER+fileName, buffer);
+                        payslipService.storePayslip(OBSERVED_FOLDER+fileName,buffer);
+
                     }catch (Exception ex){
                         System.out.println(ex.getMessage()+" eccezione ");
                     }
