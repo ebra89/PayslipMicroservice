@@ -1,21 +1,22 @@
 package it.gruppoaton.PayslipMicroservice.controller;
 
-import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/payslips")
+@CrossOrigin(origins = {"http://localhost:4200"})
 public class PayslipController {
 
     @Autowired
@@ -24,19 +25,42 @@ public class PayslipController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/")
-    public String listPayslips(Model model){
-        List<Payslip> payslips = new ArrayList<Payslip>();
-        payslips=payslipService.payslipsList();
-        model.addAttribute("payslips", payslips);
-        return "payslip";
+    @GetMapping("/list")
+    public List<Payslip> payslips(){
+        return payslipService.getAll();
     }
+
     @GetMapping("/{fiscalCode}")
-    public String listPayslipsEmployee(Model model, @PathVariable("fiscalCode") String fiscalCode){
-        List<Payslip> payslips = new ArrayList<Payslip>();
-        payslips=payslipService.findEmployeePayslips(employeeService.findByFc(fiscalCode));
-        model.addAttribute("payslips", payslips);
-        return "payslip";
+    public List<Payslip> employeePayslips(@PathVariable("fiscalCode") String fiscalCode){
+        return payslipService.findEmployeePayslips(employeeService.findByFc(fiscalCode));
+    }
+
+    @GetMapping("/{sixMonthPayslip}")
+    public List<Payslip> sixMonthPayslip(@PathVariable ("sixMonthPayslip") String sixMonthPayslip, Payslip payslip){
+        return payslipService.showLastSixMonthsPayslips(payslip);
+    }
+
+    @GetMapping("/{byMonth}")
+    public Payslip payslipByMonth(@PathVariable ("payslipByMonth") String payslipByMonth, int month){
+        return payslipService.findByMonth(month);
+    }
+
+    @GetMapping("/{byYear}")
+    public Payslip payslipByYear(@PathVariable ("payslipByYear") String payslipByYear, int year){
+        return payslipService.findByYear(year);
+    }
+
+
+
+    public ResponseEntity<Resource> downloadPayslip(@PathVariable Integer payslipId) throws FileNotFoundException {
+
+        Payslip payslip = payslipService.getPayslip(payslipId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(payslip.getTypeFile()))
+                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ payslip.getEmployee().getFiscalCode() + "\"")
+                        .body(new ByteArrayResource(payslip.getPayslipPdf()));
+
     }
 
 

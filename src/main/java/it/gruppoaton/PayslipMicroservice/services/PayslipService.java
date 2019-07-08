@@ -89,7 +89,12 @@ public class PayslipService {
             Email email = new Email(employee, "nuovo cedolino","hai un nuovo cedolino!");
             buffer.putEmail(email);
 
-            }
+    }
+
+    public Payslip getPayslip(Integer payslipId) throws FileNotFoundException {
+        return payslipRepository.findById(payslipId)
+                .orElseThrow(()-> new FileNotFoundException("file not found!!!" +payslipId));
+    }
 
 
                                                                  // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
@@ -131,16 +136,15 @@ public class PayslipService {
     	LocalDate sixMonthsBefore = LocalDate.now().minusDays(182);
     	List<Payslip> lastPayslips = new ArrayList<>();
 
-    	while (payslipDate.isAfter(sixMonthsBefore)&&payslipDate.isBefore(currentDate)) {
+    	while (payslipDate.isAfter(sixMonthsBefore)&& payslipDate.isBefore(currentDate)) {
 
     		lastPayslips.add(payslip);
     	}
     	return lastPayslips;
-        }
-        public List<Payslip> payslipsList() {
-            return payslipRepository.findAll();
-
-
-        }
-
     }
+
+
+    public List<Payslip> getAll() {
+        return payslipRepository.findAll();
+    }
+}
