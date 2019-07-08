@@ -58,10 +58,7 @@ public class PayslipMicroserviceApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		long start = System.currentTimeMillis();
-
 		watchService.run(buffer);
-
 		emailService.run(buffer);
 	}
 }
