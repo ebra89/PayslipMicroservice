@@ -9,14 +9,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.util.List;
 
-@RestController
+//@RestController
 @RequestMapping("/payslips")
-@CrossOrigin(origins = {"http://localhost:4200"})
+//@CrossOrigin(origins = {"http://localhost:4200"})
+@Controller
 public class PayslipController {
 
     @Autowired
@@ -52,6 +54,7 @@ public class PayslipController {
 
 
 
+    @GetMapping("/downloadPayslip/{payslipId}")
     public ResponseEntity<Resource> downloadPayslip(@PathVariable Integer payslipId) throws FileNotFoundException {
 
         Payslip payslip = payslipService.getPayslip(payslipId);
