@@ -38,6 +38,7 @@ public class Buffer {
         }
         Email email = coda.removeFirst();
         notifyAll();
+
         return email;
     }
     public synchronized void putEmail(Email email){
