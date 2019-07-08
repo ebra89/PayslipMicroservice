@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-//@RestController
+@RestController
 @RequestMapping("/payslips")
-//@CrossOrigin(origins = {"http://localhost:4200"})
-@Controller
+@CrossOrigin(origins = {"http://localhost:4200"})
 public class PayslipController {
 
     @Autowired

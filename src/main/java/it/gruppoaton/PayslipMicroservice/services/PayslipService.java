@@ -10,13 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PayslipService {
@@ -134,10 +135,12 @@ public class PayslipService {
     	}
     	return lastPayslips;
         }
-        public List<Payslip> payslipsList() {
-            return payslipRepository.findAll();
 
-
-        }
-
+    public List<Payslip> getAll() {
+        return payslipRepository.findAll();
     }
+
+    public Payslip getPayslip(Integer payslipId) {
+        return payslipRepository.getOne(payslipId);
+    }
+}
