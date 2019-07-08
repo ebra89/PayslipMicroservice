@@ -31,7 +31,7 @@ public class PayslipService {
     @Autowired
     private EmailService emailService;
 
-    public void storePayslip (String path, Buffer buffer) throws FileNotFoundException {
+    public Email storePayslip (String path) throws FileNotFoundException {
 
         //TODO
         // da provare!!
@@ -83,9 +83,8 @@ public class PayslipService {
             System.out.println("employee mail: "+employeeService.findByFc(fiscalCode));
             Payslip payslip = new Payslip(fileContent,month,year,employee);
             payslipRepository.save(payslip);
-
             Email email = new Email(employee, "nuovo cedolino","hai un nuovo cedolino!");
-            buffer.putEmail(email);
+            return email;
 
             }
 
