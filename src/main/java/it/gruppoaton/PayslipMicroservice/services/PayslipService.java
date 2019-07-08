@@ -33,8 +33,6 @@ public class PayslipService {
 
     public Email storePayslip (String path) throws FileNotFoundException {
 
-        //TODO
-        // da provare!!
 
             File file = new File(path);
             String fileName =  file.getName();
@@ -57,9 +55,6 @@ public class PayslipService {
                 }
                 n++;
             }
-
-            System.out.println("Mese: "+i.get(0));
-            System.out.println("anno: "+i.get(1));
             month = i.get(0);
             year = i.get(1);
 
@@ -79,8 +74,6 @@ public class PayslipService {
             }
 
             Employee employee = employeeService.findByFc(fiscalCode);
-            System.out.println("employee: "+employee);
-            System.out.println("employee mail: "+employeeService.findByFc(fiscalCode));
             Payslip payslip = new Payslip(fileContent,month,year,employee);
             payslipRepository.save(payslip);
             Email email = new Email(employee, "nuovo cedolino","hai un nuovo cedolino!");
