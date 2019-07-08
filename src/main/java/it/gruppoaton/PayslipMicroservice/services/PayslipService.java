@@ -1,7 +1,6 @@
 package it.gruppoaton.PayslipMicroservice.services;
 
-import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
-import it.gruppoaton.PayslipMicroservice.component.EmailService;
+
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.model.Email;
@@ -9,8 +8,6 @@ import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,20 +24,14 @@ public class PayslipService {
     @Autowired
     private EmployeeService employeeService;
 
-    @Autowired
-    private EmailService emailService;
+    //@Autowired
+    //private EmailService emailService;
 
-    public void storePayslip (String path, Buffer buffer) throws FileNotFoundException {
-
-        //TODO
-        // da provare!!
+    public Email storePayslip (String path) throws FileNotFoundException {
 
             File file = new File(path);
             String fileName =  file.getName();
             String fiscalCode = fileName.substring(fileName.length()- 20, fileName.length()- 4);
-
-            byte fileContent [] = new byte[(int)file.length()];
-            FileInputStream fis = null;
 
             int n=0;
             int month=0;
@@ -57,11 +48,12 @@ public class PayslipService {
                 n++;
             }
 
-            System.out.println("Mese: "+i.get(0));
-            System.out.println("anno: "+i.get(1));
+
             month = i.get(0);
             year = i.get(1);
 
+            byte fileContent [] = new byte[(int)file.length()];
+            FileInputStream fis = null;
             try {
                 fis = new FileInputStream(file);
                 fis.read(fileContent);
@@ -78,18 +70,14 @@ public class PayslipService {
             }
 
             Employee employee = employeeService.findByFc(fiscalCode);
-            System.out.println("employee: "+employee);
-            System.out.println("employee mail: "+employeeService.findByFc(fiscalCode));
             Payslip payslip = new Payslip(fileContent,month,year,employee);
             payslipRepository.save(payslip);
-
             Email email = new Email(employee, "nuovo cedolino","hai un nuovo cedolino!");
-            buffer.putEmail(email);
+           return email;
+
 
             }
 
-
-                                                                 // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
     public void updatePayslip(Payslip payslip){
         //Employee employee = employeeService.findOne(fiscalCode);
         //int month = payslip.getMonth();

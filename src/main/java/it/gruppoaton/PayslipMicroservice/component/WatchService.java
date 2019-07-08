@@ -1,34 +1,37 @@
 package it.gruppoaton.PayslipMicroservice.component;
 
 import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
+import it.gruppoaton.PayslipMicroservice.entities.Employee;
+import it.gruppoaton.PayslipMicroservice.model.Email;
+import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
-
-@Component("watchService")
-public class WatchService implements Runnable{
-
-
+@Service
+public class WatchService{
 
     @Autowired
     private PayslipService payslipService;
 
     @Autowired
-    private Buffer buffer;
+    private EmployeeService employeeService;
 
-    public WatchService(Buffer buffer){
-        this.buffer = buffer;
-    }
+    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir\\";
 
-    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
+    //private Buffer buffer;
+
+    //public WatchService(Buffer buffer){this.buffer=buffer;}
 
 
-    @Override
-    public void run(){
+    @Async("watcher")
+    public void run(Buffer buffer){
 
         System.out.println("watcher partito!!");
 
@@ -58,11 +61,11 @@ public class WatchService implements Runnable{
 
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
-                    try {
-                        payslipService.storePayslip(OBSERVED_FOLDER+fileName, buffer);
-                    }catch (Exception ex){
-                        System.out.println(ex.getMessage()+" eccezione ");
-                    }
+                    Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
+                    System.out.println(" sto prima del metodo putMail");
+                    buffer.putEmail(email);
+
+
                  }
 
                 if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
