@@ -23,6 +23,9 @@ public class WatchService{
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private EmailService emailService;
+
     public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir\\";
 
     //private Buffer buffer;
@@ -31,7 +34,7 @@ public class WatchService{
 
 
     @Async("watcher")
-    public void run(Buffer buffer){
+    public void run(){
 
         System.out.println("watcher partito!!");
 
@@ -63,10 +66,15 @@ public class WatchService{
                     System.out.format("Creazione del file %s %n", fileName);
                     Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
                     System.out.println(" sto prima del metodo putMail");
-                    buffer.putEmail(email);
+                    emailService.run(email);
+                    try {
+                        wait(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
 
-                 }
+                }
 
                 if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
                     System.out.format("cancellazione del file %s %n", fileName);

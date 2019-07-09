@@ -23,7 +23,9 @@ public class EmployeeController {
 
     @GetMapping("/list")
     public List<Employee>employees(){
-       return employeeService.getAll();
+
+        return employeeService.getAll();
+
     }
 
 

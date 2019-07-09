@@ -4,6 +4,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
+import it.gruppoaton.PayslipMicroservice.model.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -21,21 +22,15 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	//private Buffer buffer;
 
-	//public EmailService (Buffer buffer){this.buffer=buffer;}
-
-
-
-			@Async("emailSender")
-			public void run(Buffer buffer){
+			public void run(Email email){
 
 				System.out.println("email service partito!!");
 
-				while (true){
-					Employee employee = buffer.takeEmail().getEmployee();
-					String subject = buffer.takeEmail().getSubject();
-					String body = buffer.takeEmail().getBody();
+
+					Employee employee = email.getEmployee();
+					String subject = email.getSubject();
+					String body = email.getBody();
 
 					MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 					JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -62,7 +57,7 @@ public class EmailService {
 						e.printStackTrace();
 					}
 					javaMailSender.send(mimeMessage);
-				}
+
 			}
 
 }
