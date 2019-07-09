@@ -22,7 +22,7 @@ public class WatchService{
     @Autowired
     private EmailService emailService;
 
-    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir";
+    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
 
     //private Buffer buffer;
 
