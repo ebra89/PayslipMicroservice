@@ -68,7 +68,7 @@ public class WatchService{
                     System.out.println(" sto prima del metodo putMail");
                     emailService.run(email);
                     try {
-                        wait(1000);
+                        Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
