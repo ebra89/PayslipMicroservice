@@ -2,6 +2,7 @@ package it.gruppoaton.PayslipMicroservice.controller;
 
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
+import it.gruppoaton.PayslipMicroservice.model.PayslipModel;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class PayslipController {
     private EmployeeService employeeService;
 
     @GetMapping("/list")
-    public List<Payslip> payslips(){
+    public List<PayslipModel> payslips(){
         return payslipService.getAll();
     }
 
@@ -43,7 +44,7 @@ public class PayslipController {
     }
 
     @GetMapping("/byDate/{fiscalCode}")
-    public List<Payslip> payslipByMonth(@RequestParam("month") int month, @RequestParam("year") int year,@PathVariable("fiscalCode") String fiscalCode){
+    public List<PayslipModel> payslipByMonth(@RequestParam("month") int month, @RequestParam("year") int year,@PathVariable("fiscalCode") String fiscalCode){
         Employee employee = employeeService.findByFc(fiscalCode);
         return payslipService.payslipEYM(month,year,employee);
     }

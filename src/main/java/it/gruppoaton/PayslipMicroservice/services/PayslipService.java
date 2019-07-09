@@ -4,6 +4,8 @@ import it.gruppoaton.PayslipMicroservice.component.EmailService;
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.model.Email;
+import it.gruppoaton.PayslipMicroservice.model.PayslipConverter;
+import it.gruppoaton.PayslipMicroservice.model.PayslipModel;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class PayslipService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    PayslipConverter payslipConverter;
+
     public Email storePayslip (String path) throws FileNotFoundException {
 
 
@@ -36,8 +41,7 @@ public class PayslipService {
             String fileName =  file.getName();
             String fiscalCode = fileName.substring(fileName.length()- 20, fileName.length()- 4);
 
-            byte fileContent [] = new byte[(int)file.length()];
-            FileInputStream fis = null;
+
 
             int n=0;
             int month=0;
@@ -56,6 +60,9 @@ public class PayslipService {
             month = i.get(0);
             year = i.get(1);
 
+
+            byte fileContent [] = new byte[(int)file.length()];
+            FileInputStream fis = null;
             try {
                 fis = new FileInputStream(file);
                 fis.read(fileContent);
@@ -86,9 +93,10 @@ public class PayslipService {
 
 
                                                                  // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
-    public List<Payslip> payslipEYM (int month, int year, Employee employee){
+    public List<PayslipModel> payslipEYM (int month, int year, Employee employee){
 
-        return payslipRepository.findByEMA(employee,month,year);
+       return payslipConverter.toViewModelList(payslipRepository.findByEMA(employee,month,year));
+
 
     }
 
@@ -136,9 +144,9 @@ public class PayslipService {
     	return lastPayslips;
     }
 
-    public List<Payslip> getAll() {
+    public List<PayslipModel> getAll() {
 
-        return payslipRepository.findAll();
+        return payslipConverter.toViewModelList(payslipRepository.findAll());
     }
 
     public Payslip getPayslip(Integer payslipId) {
