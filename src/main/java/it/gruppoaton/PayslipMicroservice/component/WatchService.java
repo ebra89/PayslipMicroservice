@@ -61,7 +61,6 @@ public class WatchService{
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
                     Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
-                    System.out.println(" sto prima del metodo putMail");
                     emailService.run(email);
                     try {
                         Thread.sleep(3000);
