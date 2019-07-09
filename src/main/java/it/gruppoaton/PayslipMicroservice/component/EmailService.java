@@ -2,8 +2,6 @@ package it.gruppoaton.PayslipMicroservice.component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
-
 import it.gruppoaton.PayslipMicroservice.model.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
