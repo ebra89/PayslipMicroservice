@@ -113,25 +113,33 @@ public class PayslipService {
         return payslipRepository.findByYear(year);
     }
 
-    public List<Payslip>showLastSixMonthsPayslips(Payslip payslip){
+    public List<Payslip>showLastSixMonthsPayslips(String fiscalCode){
+        System.out.println("fiscal code da service "+fiscalCode);
+        List<Payslip> lastPayslips = new ArrayList<>();
 
-    	int month = payslip.getMonth();
-    	int year = payslip.getYear();
+        List<Payslip> payslips = payslipRepository.findByEmployee(employeeService.findByFc(fiscalCode));
+        for (Payslip p: payslips ) {
 
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            int month = p.getMonth();
+            String m;
+            if (month<10){
+                m="0"+month;
+            }else{m=""+month;}
+            int year = p.getYear();
+            System.out.println("month: "+m+""+"year "+year+"");
+            String date = "01"+"/" + m+"/" + year;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate payslipDate = LocalDate.parse(date, formatter);
+            LocalDate currentDate = LocalDate.now();
+            LocalDate sixMonthsBefore = LocalDate.now().minusDays(182);
 
-    	String date = "01" + month + year;
-    	LocalDate payslipDate = LocalDate.parse(date, formatter);
-    	LocalDate currentDate = LocalDate.now();
-    	LocalDate sixMonthsBefore = LocalDate.now().minusDays(182);
-    	List<Payslip> lastPayslips = new ArrayList<>();
-
-    	while (payslipDate.isAfter(sixMonthsBefore)&&payslipDate.isBefore(currentDate)) {
-
-    		lastPayslips.add(payslip);
-    	}
-    	return lastPayslips;
+            if(payslipDate.isAfter(sixMonthsBefore)){
+                lastPayslips.add(p);
+            }
         }
+    	return lastPayslips;
+    }
+
 
     public List<Payslip> getAll() {
 

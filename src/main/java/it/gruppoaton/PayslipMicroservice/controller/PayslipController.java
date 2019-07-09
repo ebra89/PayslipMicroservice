@@ -36,14 +36,15 @@ public class PayslipController {
 
     @GetMapping("/{fiscalCode}")
     public List<Payslip> employeePayslips(@PathVariable("fiscalCode") String fiscalCode){
+        System.out.println("fiscal code "+fiscalCode);
         return payslipService.findEmployeePayslips(employeeService.findByFc(fiscalCode));
     }
 
-    @GetMapping("/{sixMonthPayslip}")
-    public List<Payslip> sixMonthPayslip(@PathVariable ("sixMonthPayslip") String sixMonthPayslip, Payslip payslip){
-        return payslipService.showLastSixMonthsPayslips(payslip);
+    @GetMapping("/sixMonthPayslip/{fiscalCode}")
+    public List<Payslip> sixMonthPayslip(@PathVariable("fiscalCode") String fiscalCode){
+        return payslipService.showLastSixMonthsPayslips(fiscalCode);
     }
-
+ /*
     @GetMapping("/{byMonth}")
     public Payslip payslipByMonth(@PathVariable ("payslipByMonth") String payslipByMonth, int month){
         return payslipService.findByMonth(month);
@@ -54,7 +55,7 @@ public class PayslipController {
         return payslipService.findByYear(year);
     }
 
-
+  */
 
     @GetMapping(value = "/downloadPayslip/{payslipId}", produces = "application/pdf")
     public ResponseEntity<Resource> downloadPayslip(@PathVariable Integer payslipId) {
