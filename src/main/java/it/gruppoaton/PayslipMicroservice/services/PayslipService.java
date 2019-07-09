@@ -1,6 +1,5 @@
 package it.gruppoaton.PayslipMicroservice.services;
 
-import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
 import it.gruppoaton.PayslipMicroservice.component.EmailService;
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
@@ -8,16 +7,17 @@ import it.gruppoaton.PayslipMicroservice.model.Email;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 
 import java.io.*;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PayslipService {
@@ -79,7 +79,12 @@ public class PayslipService {
             Email email = new Email(employee, "nuovo cedolino","hai un nuovo cedolino!");
             return email;
 
-            }
+    }
+
+    public Payslip getFile(Integer id) throws FileNotFoundException {
+        return payslipRepository.findById(id)
+                .orElseThrow(()-> new FileNotFoundException("file not found "));
+    }
 
 
                                                                  // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
@@ -129,10 +134,15 @@ public class PayslipService {
         }
 
     public List<Payslip> getAll() {
+
         return payslipRepository.findAll();
     }
 
     public Payslip getPayslip(Integer payslipId) {
+
         return payslipRepository.getOne(payslipId);
     }
+
+
+
 }

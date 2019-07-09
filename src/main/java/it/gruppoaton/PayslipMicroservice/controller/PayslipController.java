@@ -1,6 +1,7 @@
 package it.gruppoaton.PayslipMicroservice.controller;
 
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
+import it.gruppoaton.PayslipMicroservice.model.PayslipModel;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -54,14 +57,21 @@ public class PayslipController {
 
 
     @GetMapping("/downloadPayslip/{payslipId}")
-    public ResponseEntity<Resource> downloadPayslip(@PathVariable Integer payslipId) throws FileNotFoundException {
+    public ResponseEntity<Resource> downloadPayslip(@PathVariable Integer payslipId) {
 
-        Payslip payslip = payslipService.getPayslip(payslipId);
-
+        Payslip payslip = null;
+        try {
+            payslip = payslipService.getFile(payslipId);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("payslip id: "+payslipId);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(payslip.getTypeFile()))
                      .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ payslip.getEmployee().getFiscalCode() + "\"")
                         .body(new ByteArrayResource(payslip.getPayslipPdf()));
+
+
 
     }
 

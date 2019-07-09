@@ -30,7 +30,7 @@ public class Payslip {
         this.month = month;
         this.year = year;
         this.employee = employee;
-        this.typeFile = "pdf";
+        this.typeFile = ".pdf";
     }
 
 
