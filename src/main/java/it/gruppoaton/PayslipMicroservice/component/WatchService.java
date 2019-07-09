@@ -22,11 +22,8 @@ public class WatchService{
     @Autowired
     private EmailService emailService;
 
-    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
+    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir\\";
 
-    //private Buffer buffer;
-
-    //public WatchService(Buffer buffer){this.buffer=buffer;}
 
 
     @Async("watcher")
