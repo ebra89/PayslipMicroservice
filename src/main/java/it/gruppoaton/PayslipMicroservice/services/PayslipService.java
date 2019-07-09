@@ -7,12 +7,10 @@ import it.gruppoaton.PayslipMicroservice.model.Email;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 
 import java.io.*;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -88,13 +86,10 @@ public class PayslipService {
 
 
                                                                  // mi trova payslip con una ricerca su employee,mese ,anno e lo aggiorna
-    public void updatePayslip(Payslip payslip){
-        //Employee employee = employeeService.findOne(fiscalCode);
-        //int month = payslip.getMonth();
-        //int year = payslip.getYear();
-        //payslip = payslipRepository.findByEMA(employee,month,year);
-        payslip = payslipRepository.findByEMA(payslip.getEmployee(),payslip.getMonth(),payslip.getYear());
-        payslipRepository.save(payslip);
+    public List<Payslip> payslipEYM (int month, int year, Employee employee){
+
+        return payslipRepository.findByEMA(employee,month,year);
+
     }
 
                                                                          // trova tutti payslip del employye in questione
@@ -114,7 +109,6 @@ public class PayslipService {
     }
 
     public List<Payslip>showLastSixMonthsPayslips(String fiscalCode){
-        System.out.println("fiscal code da service "+fiscalCode);
         List<Payslip> lastPayslips = new ArrayList<>();
 
         List<Payslip> payslips = payslipRepository.findByEmployee(employeeService.findByFc(fiscalCode));
@@ -123,8 +117,10 @@ public class PayslipService {
             int month = p.getMonth();
             String m;
             if (month<10){
-                m="0"+month;
-            }else{m=""+month;}
+                m ="0"+month;
+            }else{
+                m =" "+month;
+            }
             int year = p.getYear();
             System.out.println("month: "+m+""+"year "+year+"");
             String date = "01"+"/" + m+"/" + year;
@@ -140,7 +136,6 @@ public class PayslipService {
     	return lastPayslips;
     }
 
-
     public List<Payslip> getAll() {
 
         return payslipRepository.findAll();
@@ -150,7 +145,5 @@ public class PayslipService {
 
         return payslipRepository.getOne(payslipId);
     }
-
-
 
 }

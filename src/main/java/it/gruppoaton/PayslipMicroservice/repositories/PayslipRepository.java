@@ -21,7 +21,7 @@ public interface PayslipRepository extends JpaRepository<Payslip, Integer> {
     Payslip findByYear(int year);
 
     @Query("select p from Payslip p where p.employee = ?1 and p.month = ?2 and p.year = ?3")
-    Payslip findByEMA(Employee employee, int month, int year);
+    List<Payslip> findByEMA(Employee employee, int month, int year);
 
 
 }
