@@ -56,7 +56,7 @@ public class PayslipController {
 
 
 
-    @GetMapping("/downloadPayslip/{payslipId}")
+    @GetMapping(value = "/downloadPayslip/{payslipId}", produces = "application/pdf")
     public ResponseEntity<Resource> downloadPayslip(@PathVariable Integer payslipId) {
 
         Payslip payslip = null;
@@ -67,8 +67,8 @@ public class PayslipController {
         }
         System.out.println("payslip id: "+payslipId);
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(payslip.getTypeFile()))
-                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ payslip.getEmployee().getFiscalCode() + "\"")
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ payslip.getEmployee().getFiscalCode() +".pdf"+ "\"")
                         .body(new ByteArrayResource(payslip.getPayslipPdf()));
 
 
