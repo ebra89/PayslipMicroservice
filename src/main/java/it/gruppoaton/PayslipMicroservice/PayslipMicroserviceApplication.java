@@ -1,7 +1,5 @@
 package it.gruppoaton.PayslipMicroservice;
 
-
-import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
 import it.gruppoaton.PayslipMicroservice.component.WatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -30,10 +28,6 @@ public class PayslipMicroserviceApplication implements CommandLineRunner {
 		return executor;
 
 	}
-
-
-	Buffer buffer = Buffer.getInstance();
-
 
 	public static void main(String[] args){
 		SpringApplication.run(PayslipMicroserviceApplication.class, args);

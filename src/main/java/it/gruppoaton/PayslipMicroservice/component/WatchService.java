@@ -1,16 +1,12 @@
 package it.gruppoaton.PayslipMicroservice.component;
 
-import it.gruppoaton.PayslipMicroservice.Utils.Buffer;
-import it.gruppoaton.PayslipMicroservice.entities.Employee;
+
 import it.gruppoaton.PayslipMicroservice.model.Email;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
