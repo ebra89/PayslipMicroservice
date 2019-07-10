@@ -1,25 +1,25 @@
 package it.gruppoaton.PayslipMicroservice.Utils;
 
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
-import it.gruppoaton.PayslipMicroservice.services.PayslipService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
-
+@Component
 public class Validator {
 
     @Autowired
     private EmployeeService employeeService;
 
-     public String fiscalCodeValidator(String cf) {
+     public static String fiscalCodeValidator(String cf) {
         int i, s, c;
         String cf2;
         int setdisp[] = {1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20,
                 11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23 };
-        if( cf.length() == 0 ) return "";
+        if( cf.length() == 0 ) return "erroe codice fiscale";
         if( cf.length() != 16 )
-            return "La lunghezza del codice fiscale non &egrave;\n"
+            return "La lunghezza del codice fiscale non è;\n"
                     + "corretta: il codice fiscale dovrebbe essere lungo\n"
                     + "esattamente 16 caratteri.";
         cf2 = cf.toUpperCase();
@@ -45,7 +45,7 @@ public class Validator {
         if( s%26 + 'A' != cf2.charAt(15) )
             return "Il codice fiscale non &egrave; corretto:\n"
                     + "il codice di controllo non corrisponde.";
-        return "";
+        return "ok";
     }
 
     public boolean PayslipFileNameValidator(String payslipFileName){
@@ -55,28 +55,33 @@ public class Validator {
         String[] tokens = StringUtils.split(payslipFileName,"_-.");
 
         // controlla mese e anno
-        int n=0;
-        int month=0;
-        int year=0;
-        LinkedList<Integer> p=new LinkedList<>();
+        Integer month=0;
+        Integer year=0;
+        LinkedList<Integer> p = new LinkedList<>();
         for(String s : tokens){
             try {
                 p.add(Integer.parseInt(s));
-            }catch (Exception ex){
-                System.out.println(ex.getStackTrace());
-            }
-            n++;
+            }catch (Exception ex){}
         }
         month =p.get(0);
-        year = p.get(1);
+        if (month > 12 && month < 1){System.out.println("errore formato mese "+month); return false;
 
+        }
+
+        year = p.get(1);
+        if (year.toString().length()<4 ||year.toString().length()>4){System.out.println("errore formato anno "+year);return false;}
 
         //controllo codice fiscale
         LinkedList<String> s=new LinkedList<>();
         for(String string : tokens){
                 s.add(string);
         }
-        if(!fiscalCodeValidator(s.getLast()).isEmpty()){return false;}
+        String fiscalCode= s.get(s.size()-2);
+        if(!(fiscalCodeValidator(fiscalCode).equals("ok"))){
+            System.out.println(fiscalCodeValidator(fiscalCode));
+            System.out.println(fiscalCode);
+            return false;}
+        if((employeeService.findByFc(fiscalCode))==null){System.out.println("employee con codice fiscale "+fiscalCode+" inesistente"); return false;}
 
     return true;
 
