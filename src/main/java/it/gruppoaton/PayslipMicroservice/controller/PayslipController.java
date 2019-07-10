@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,22 +30,43 @@ public class PayslipController {
 
     @GetMapping("/list")
     public List<PayslipModel> payslips(){
+
         return payslipService.getAll();
     }
 
     @GetMapping("/{fiscalCode}")
     public List<PayslipModel> employeePayslips(@PathVariable("fiscalCode") String fiscalCode){
-        return payslipService.findEmployeePayslips(employeeService.findByFc(fiscalCode));
+        List<PayslipModel>payslipModels = new ArrayList<>();
+        try {
+            payslipModels = payslipService.findEmployeePayslips(employeeService.findByFc(fiscalCode));
+        }catch (Exception e){
+            System.out.println("Nessun utente con questo codice fiscale");
+        }
+        return payslipModels;
     }
 
     @GetMapping("/sixMonthPayslip/{fiscalCode}")
     public List<PayslipModel> sixMonthPayslip(@PathVariable("fiscalCode") String fiscalCode){
-        return payslipService.showLastSixMonthsPayslips(fiscalCode);
+        List<PayslipModel>payslipModels = new ArrayList<>();
+        try {
+            payslipModels = payslipService.showLastSixMonthsPayslips(fiscalCode);
+        }catch (Exception e){
+            System.out.println("Nessun utente con questo codice fiscale");
+        }
+        return payslipModels;
     }
+
 
     @GetMapping("/byDate/{fiscalCode}")
     public List<PayslipModel> payslipByMonth(@RequestParam("month") int month, @RequestParam("year") int year,@PathVariable("fiscalCode") String fiscalCode){
-        Employee employee = employeeService.findByFc(fiscalCode);
+
+        Employee employee = null;
+        try {
+            employee = employeeService.findByFc(fiscalCode);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return payslipService.payslipEYM(month,year,employee);
     }
 
