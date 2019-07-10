@@ -29,7 +29,7 @@ public class WatchService{
     @Async("watcher")
     public void run(){
 
-        System.out.println("watcher partito!!");
+
 
         Path path = Paths.get(OBSERVED_FOLDER);
 
