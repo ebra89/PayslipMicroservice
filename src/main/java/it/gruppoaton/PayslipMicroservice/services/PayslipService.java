@@ -78,7 +78,12 @@ public class PayslipService {
                 }
             }
 
-            Employee employee = employeeService.findByFc(fiscalCode);
+            Employee employee = null;
+            try {
+                employee = employeeService.findByFc(fiscalCode);
+            }catch (Exception e){
+                System.out.println("Nessun utente con questo codice fiscale");
+            }
             Payslip payslip = new Payslip(fileContent,month,year,employee);
             String firstName = employee.getFirstName();
             String lastName = employee.getLastName();
