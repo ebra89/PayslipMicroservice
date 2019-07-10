@@ -58,17 +58,17 @@ public class Validator {
         int n=0;
         int month=0;
         int year=0;
-        LinkedList<String> i=new LinkedList<>();
+        LinkedList<Integer> p=new LinkedList<>();
         for(String s : tokens){
             try {
-                i.add(Integer.parseInt(s));
+                p.add(Integer.parseInt(s));
             }catch (Exception ex){
                 System.out.println(ex.getStackTrace());
             }
             n++;
         }
-        month = i.get(0);
-        year = i.get(1);
+        month =p.get(0);
+        year = p.get(1);
 
 
         //controllo codice fiscale
@@ -76,9 +76,9 @@ public class Validator {
         for(String string : tokens){
                 s.add(string);
         }
-        if(!fiscalCodeValidator(i.getLast()).isEmpty()){return false;}
+        if(!fiscalCodeValidator(s.getLast()).isEmpty()){return false;}
 
-
+    return true;
 
 
     }
