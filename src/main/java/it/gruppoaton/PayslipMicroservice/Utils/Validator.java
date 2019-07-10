@@ -2,7 +2,7 @@ package it.gruppoaton.PayslipMicroservice.Utils;
 
 public class Validator {
 
-    static String ControllaCF(String cf) {
+    static public String fiscalCodeValidator(String cf) {
         int i, s, c;
         String cf2;
         int setdisp[] = {1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20,

@@ -1,6 +1,7 @@
 package it.gruppoaton.PayslipMicroservice.component;
 
 
+import it.gruppoaton.PayslipMicroservice.Utils.Validator;
 import it.gruppoaton.PayslipMicroservice.model.Email;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
@@ -21,6 +22,9 @@ public class WatchService{
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private Validator validator;
 
     public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
 
@@ -57,8 +61,8 @@ public class WatchService{
 
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
+                    Validator.fiscalCodeValidator(fileName.getFileName().toString());
                     Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
-                    System.out.println(" sto prima del metodo putMail");
                     emailService.run(email);
                     try {
                         Thread.sleep(3000);
