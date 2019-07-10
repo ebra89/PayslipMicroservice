@@ -34,7 +34,6 @@ public class PayslipController {
 
     @GetMapping("/{fiscalCode}")
     public List<PayslipModel> employeePayslips(@PathVariable("fiscalCode") String fiscalCode){
-        System.out.println("fiscal code "+fiscalCode);
         return payslipService.findEmployeePayslips(employeeService.findByFc(fiscalCode));
     }
 
