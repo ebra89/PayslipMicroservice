@@ -2,7 +2,6 @@ package it.gruppoaton.PayslipMicroservice.controller;
 
 import it.gruppoaton.PayslipMicroservice.entities.Employee;
 import it.gruppoaton.PayslipMicroservice.entities.Payslip;
-import it.gruppoaton.PayslipMicroservice.model.PayslipConverter;
 import it.gruppoaton.PayslipMicroservice.model.PayslipModel;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
