@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,9 +24,13 @@ public class EmployeeController {
 
     @GetMapping("/list")
     public List<Employee>employees(){
-
-        return employeeService.getAll();
-
+        List<Employee>employees = new ArrayList<>();
+        try {
+            employees = employeeService.getAll();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return employees;
     }
 
 
