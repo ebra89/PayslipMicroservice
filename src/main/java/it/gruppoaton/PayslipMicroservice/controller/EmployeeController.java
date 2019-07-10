@@ -36,15 +36,24 @@ public class EmployeeController {
 
     @GetMapping("/{nameLastName}")
     public List<Employee> employeeByNameLastName(@PathVariable("nameLastName") String nameLastName){
-        return employeeService.findByName(nameLastName);
+        List<Employee> employees = new ArrayList<>();
+        try {
+            employees = employeeService.findByName(nameLastName);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return employees;
     }
 
     @GetMapping("/{fiscalCode}")
-    public Employee employeeByFiscalCode(@PathVariable ("fiscalCode") String fiscalCode, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            System.out.println("Utente con questo codice fiscale non esiste");
+    public Employee employeeByFiscalCode(@PathVariable ("fiscalCode") String fiscalCode){
+        Employee employee = null;
+        try {
+            employee = employeeService.findByFc(fiscalCode);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return employeeService.findByFc(fiscalCode);
+        return employee;
     }
 
 
