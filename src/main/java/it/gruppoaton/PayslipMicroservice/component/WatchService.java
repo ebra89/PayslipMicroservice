@@ -59,14 +59,16 @@ public class WatchService{
                     System.out.format("Creazione del file %s %n", fileName);
                     Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
                     System.out.println(" sto prima del metodo putMail");
-                    emailService.run(email);
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if(email!=null){
+                        emailService.run(email);
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        System.out.println("Payslip "+fileName+" non salvato!!");
                     }
-
-
                 }
 
                 if (kind == StandardWatchEventKinds.ENTRY_DELETE) {

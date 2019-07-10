@@ -87,7 +87,12 @@ public class PayslipService {
             Payslip payslip = new Payslip(fileContent,month,year,employee);
             String firstName = employee.getFirstName();
             String lastName = employee.getLastName();
-            payslipRepository.save(payslip);
+            try {
+                payslipRepository.save(payslip);
+            }catch (Exception e){
+                return null;
+            }
+
             Email email = new Email(employee, "Nuovo cedolino"," Gentile "+firstName.toUpperCase()+" "+lastName.toUpperCase()+" hai un nuovo cedolino.");
             return email;
 
