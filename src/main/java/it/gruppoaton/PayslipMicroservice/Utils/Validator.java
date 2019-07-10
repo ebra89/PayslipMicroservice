@@ -83,8 +83,7 @@ public class Validator {
             return false;}
         if((employeeService.findByFc(fiscalCode))==null){System.out.println("employee con codice fiscale "+fiscalCode+" inesistente"); return false;}
 
+        if(!(s.getLast().toUpperCase().equals("PDF"))){System.out.println("estensione del file " + s.getLast()); return false;}
     return true;
-
-
-    }
+   }
 }
