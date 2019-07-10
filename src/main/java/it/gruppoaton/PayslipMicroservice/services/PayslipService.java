@@ -80,8 +80,10 @@ public class PayslipService {
 
             Employee employee = employeeService.findByFc(fiscalCode);
             Payslip payslip = new Payslip(fileContent,month,year,employee);
+            String firstName = employee.getFirstName();
+            String lastName = employee.getLastName();
             payslipRepository.save(payslip);
-            Email email = new Email(employee, "nuovo cedolino","hai un nuovo cedolino!");
+            Email email = new Email(employee, "Nuovo cedolino"," Gentile "+firstName.toUpperCase()+" "+lastName.toUpperCase()+" hai un nuovo cedolino.");
             return email;
 
     }
@@ -101,8 +103,9 @@ public class PayslipService {
     }
 
                                                                          // trova tutti payslip del employye in questione
-    public List<Payslip>findEmployeePayslips(Employee employee){
-        return payslipRepository.findByEmployee(employee);
+    public List<PayslipModel>findEmployeePayslips(Employee employee){
+
+        return payslipConverter.toViewModelList(payslipRepository.findByEmployee(employee));
     }
 
                                                                             // trova payslip con una ricerca su mese

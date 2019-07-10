@@ -26,6 +26,8 @@ public class EmailService {
 
 
 					Employee employee = email.getEmployee();
+					String firstName = email.getEmployee().getFirstName();
+					String lastName = email.getEmployee().getLastName();
 					String subject = email.getSubject();
 					String body = email.getBody();
 
@@ -40,6 +42,16 @@ public class EmailService {
 					}
 					try {
 						helper.setTo(employee.getEmail());
+					}catch (MessagingException e){
+						e.printStackTrace();
+					}
+					try {
+						helper.setTo(firstName.toUpperCase());
+					}catch (MessagingException e){
+						e.printStackTrace();
+					}
+					try {
+						helper.setTo(lastName.toUpperCase());
 					}catch (MessagingException e){
 						e.printStackTrace();
 					}

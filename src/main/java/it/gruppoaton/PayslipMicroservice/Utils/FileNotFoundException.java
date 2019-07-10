@@ -8,6 +8,7 @@ public class FileNotFoundException extends Exception {
 
     @Override
     public String toString() {
+
         return getMessage()+"File non trovato !!!";
     }
 }
