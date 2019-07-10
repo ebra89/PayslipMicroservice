@@ -26,7 +26,7 @@ public class WatchService{
     @Autowired
     Validator validator;
 
-    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir\\";
+    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
 
 
 
@@ -42,59 +42,51 @@ public class WatchService{
             WatchKey key = path.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE,
                     StandardWatchEventKinds.ENTRY_MODIFY);
-        while(true) {
+            while(true) {
 
-            try {
-                key = watcher.take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            List<WatchEvent<?>> events = key.pollEvents();
-            for (WatchEvent event : events) {
-                WatchEvent.Kind<?> kind = event.kind();
-                WatchEvent<Path> ev = (WatchEvent<Path>) event;
-                Path fileName = ev.context();
-
-                if (kind == StandardWatchEventKinds.OVERFLOW) {
-                    continue;
+                try {
+                    key = watcher.take();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-                    System.out.format("Creazione del file %s %n", fileName);
-                    if(!(validator.PayslipFileNameValidator(fileName.getFileName().toString()))){
-                        System.out.println("il payslip " + fileName + " non è stato slavato nome del file non corretto");
-                    }else{
-                        Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
-                        if (email!=null) {
-                            emailService.run(email);
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }else{
-                            System.out.println("il payslip " + fileName + " non è stato slavato");
-                        }
-
+                List<WatchEvent<?>> events = key.pollEvents();
+                for(WatchEvent event : events) {
+                    WatchEvent.Kind<?> kind = event.kind();
+                    WatchEvent<Path> ev = (WatchEvent<Path>) event;
+                    Path fileName = ev.context();
+                    if (kind == StandardWatchEventKinds.OVERFLOW) {
+                        continue;
                     }
-
-
-                }
-
-                if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-                    System.out.format("cancellazione del file %s %n", fileName);
-                }
-
-                if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-                    System.out.format("il file %s è stato modificato %n", fileName);
-                }
-
-                boolean valid = key.reset();
-                if (!valid) {
-                    break;
+                    if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+                        System.out.format("Creazione del file %s %n", fileName);
+                        if(!(validator.PayslipFileNameValidator(fileName.getFileName().toString()))){
+                            System.out.println("il payslip " + fileName + " non è stato slavato nome del file non corretto");
+                        }else{
+                            Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
+                            if(email!=null) {
+                                emailService.run(email);
+                                try {
+                                    Thread.sleep(3000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }else{
+                                System.out.println("il payslip " + fileName + " non è stato slavato");
+                            }
+                        }
+                    }
+                    if(kind == StandardWatchEventKinds.ENTRY_DELETE) {
+                        System.out.format("cancellazione del file %s %n", fileName);
+                    }
+                    if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+                        System.out.format("il file %s è stato modificato %n", fileName);
+                    }
+                    boolean valid = key.reset();
+                    if (!valid) {
+                        break;
+                    }
                 }
             }
-        }
         } catch (IOException e) {
             e.printStackTrace();
         }
