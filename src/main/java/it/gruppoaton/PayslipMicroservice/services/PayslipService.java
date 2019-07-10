@@ -119,9 +119,8 @@ public class PayslipService {
         return payslipRepository.findByYear(year);
     }
 
-    public List<Payslip>showLastSixMonthsPayslips(String fiscalCode){
+    public List<PayslipModel>showLastSixMonthsPayslips(String fiscalCode){
         List<Payslip> lastPayslips = new ArrayList<>();
-
         List<Payslip> payslips = payslipRepository.findByEmployee(employeeService.findByFc(fiscalCode));
         for (Payslip p: payslips ) {
 
@@ -144,7 +143,7 @@ public class PayslipService {
                 lastPayslips.add(p);
             }
         }
-    	return lastPayslips;
+    	return payslipConverter.toViewModelList(lastPayslips);
     }
 
     public List<PayslipModel> getAll() {
