@@ -1,8 +1,18 @@
 package it.gruppoaton.PayslipMicroservice.Utils;
 
+import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
+import it.gruppoaton.PayslipMicroservice.services.PayslipService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.LinkedList;
+
 public class Validator {
 
-    static public String fiscalCodeValidator(String cf) {
+    @Autowired
+    private EmployeeService employeeService;
+
+     public String fiscalCodeValidator(String cf) {
         int i, s, c;
         String cf2;
         int setdisp[] = {1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20,
@@ -36,5 +46,40 @@ public class Validator {
             return "Il codice fiscale non &egrave; corretto:\n"
                     + "il codice di controllo non corrisponde.";
         return "";
+    }
+
+    public boolean PayslipFileNameValidator(String payslipFileName){
+
+
+
+        String[] tokens = StringUtils.split(payslipFileName,"_-.");
+
+        // controlla mese e anno
+        int n=0;
+        int month=0;
+        int year=0;
+        LinkedList<String> i=new LinkedList<>();
+        for(String s : tokens){
+            try {
+                i.add(Integer.parseInt(s));
+            }catch (Exception ex){
+                System.out.println(ex.getStackTrace());
+            }
+            n++;
+        }
+        month = i.get(0);
+        year = i.get(1);
+
+
+        //controllo codice fiscale
+        LinkedList<String> s=new LinkedList<>();
+        for(String string : tokens){
+                s.add(string);
+        }
+        if(!fiscalCodeValidator(i.getLast()).isEmpty()){return false;}
+
+
+
+
     }
 }

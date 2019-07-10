@@ -61,7 +61,7 @@ public class WatchService{
 
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                     System.out.format("Creazione del file %s %n", fileName);
-                    Validator.fiscalCodeValidator(fileName.getFileName().toString());
+                    validator.PayslipFileNameValidator(fileName.getFileName().toString());
                     Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
                     emailService.run(email);
                     try {
