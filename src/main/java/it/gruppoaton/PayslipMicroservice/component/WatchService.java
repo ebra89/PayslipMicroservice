@@ -27,7 +27,7 @@ public class WatchService{
     @Autowired
     Validator validator;
 
-    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
+    public static final String OBSERVED_FOLDER = "/home/dir/";
 
     @Async("watcher")
     public void run(){
