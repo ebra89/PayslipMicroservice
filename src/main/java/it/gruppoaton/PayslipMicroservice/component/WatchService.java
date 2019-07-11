@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
+
 @Service
 public class WatchService{
 
@@ -28,12 +29,8 @@ public class WatchService{
 
     public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
 
-
-
     @Async("watcher")
     public void run(){
-
-
 
         Path path = Paths.get(OBSERVED_FOLDER);
 
