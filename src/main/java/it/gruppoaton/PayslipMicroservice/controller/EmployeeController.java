@@ -34,11 +34,11 @@ public class EmployeeController {
     }
 
 
-    @GetMapping("/{nameLastName}")
-    public List<Employee> employeeByNameLastName(@PathVariable("nameLastName") String nameLastName){
+    @GetMapping("/findByName")
+    public List<Employee> employeeByNameLastName(@RequestParam("name") String name){
         List<Employee> employees = new ArrayList<>();
         try {
-            employees = employeeService.findByName(nameLastName);
+            employees = employeeService.findByName(name);
         }catch (Exception e){
             e.printStackTrace();
         }
