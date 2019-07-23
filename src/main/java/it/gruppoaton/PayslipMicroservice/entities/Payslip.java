@@ -19,8 +19,7 @@ public class Payslip {
 
     private int version;
 
-    @OneToMany(mappedBy = "payslip" , cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-    private List<PayslipType> types;
+    private String type;
 
     private String typeFile;
 
@@ -32,22 +31,25 @@ public class Payslip {
     public Payslip() {
     }
 
-    public Payslip(byte[] payslipPdf, int month, int year, Employee employee) {
+    public Payslip(byte[] payslipPdf, int month, int year, Employee employee, int version, String type) {
         this.payslipPdf = payslipPdf;
         this.month = month;
         this.year = year;
         this.employee = employee;
+        this.version = version;
+        this.type = type;
         this.typeFile = ".pdf";
+
 
     }
 
-    public Payslip(int idPayslip, byte[] payslipPdf, int month, int year, int version, List<PayslipType> types, String typeFile, Employee employee) {
+    public Payslip(int idPayslip, byte[] payslipPdf, int month, int year, int version, String type, String typeFile, Employee employee) {
         this.idPayslip = idPayslip;
         this.payslipPdf = payslipPdf;
         this.month = month;
         this.year = year;
         this.version = version;
-        this.types = types;
+        this.type = type;
         this.typeFile = typeFile;
         this.employee = employee;
     }
@@ -108,11 +110,11 @@ public class Payslip {
         this.version = version;
     }
 
-    public List<PayslipType> getTypes() {
-        return types;
+    public String getType() {
+        return type;
     }
 
-    public void setType(List<PayslipType> types) {
-        this.types = types;
+    public void setType(String type) {
+        this.type = type;
     }
 }

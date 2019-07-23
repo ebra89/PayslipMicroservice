@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.io.*;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,21 +35,25 @@ public class PayslipService {
     @Autowired
     PayslipConverter payslipConverter;
 
-    public Email storePayslip (String path) throws FileNotFoundException {
+    public Email storePayslip (Path path) throws FileNotFoundException {
 
 
-            File file = new File(path);
+            File file = new File(path.toString());
             String fileName =  file.getName();
             String fiscalCode = fileName.substring(fileName.length()- 20, fileName.length()- 4);
 
 
 
-            int n=0;
+
             int month=0;
             int year=0;
+            int version=0;
+
+
             String[] tokens = StringUtils.split(fileName,"_-.");
             LinkedList<Integer> i=new LinkedList<>();
 
+            int n=0;
             for(String s : tokens){
                 try {
                     i.add(Integer.parseInt(s));
@@ -59,6 +64,15 @@ public class PayslipService {
             }
             month = i.get(0);
             year = i.get(1);
+            if(i.size()>=3){
+                version=i.get(2);
+            }
+
+
+            String type;
+            String[] p= StringUtils.split(path.getParent().toString(),"\\ /");
+            type = p[p.length-1];
+
 
 
 
@@ -85,13 +99,25 @@ public class PayslipService {
             }catch (Exception e){
                 System.out.println("Nessun utente con questo codice fiscale");
             }
-            Payslip payslip = new Payslip(fileContent,month,year,employee);
+
+            Payslip payslip;
+            List<Payslip> payslipsFind=payslipRepository.isExsit(employee,month,year, version, type);
+            if (!payslipsFind.isEmpty()){
+                Payslip payslipExistent=payslipsFind.get(0);
+                payslipExistent.setPayslipPdf(fileContent);
+                payslip=payslipExistent;
+            }else{
+                payslip = new Payslip(fileContent, month, year, employee, version, type);
+            }
+
+
             String firstName = employee.getFirstName();
             String lastName = employee.getLastName();
             try {
                 payslipRepository.save(payslip);
 
             }catch (Exception e){
+                System.out.println("salvataggio del payslip non riuscito " + e.getMessage());
                 return null;
             }
 
@@ -167,5 +193,6 @@ public class PayslipService {
 
         return payslipRepository.getOne(payslipId);
     }
+
 
 }

@@ -1,5 +1,6 @@
 package it.gruppoaton.PayslipMicroservice;
 
+import it.gruppoaton.PayslipMicroservice.entities.Payslip;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,8 @@ public class PayslipMicroserviceApplicationTests {
 
 	@Test
 	public void contextLoads() {
+
+
 	}
 
 }

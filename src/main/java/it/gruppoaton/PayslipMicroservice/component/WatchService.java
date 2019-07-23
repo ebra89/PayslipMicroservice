@@ -11,7 +11,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class WatchService{
@@ -28,73 +31,98 @@ public class WatchService{
     @Autowired
     Validator validator;
 
-    public static final String OBSERVED_FOLDER_STANDARD = "C:\\Users\\ATON User 5\\Desktop\\dir\\standard\\";
-    public static final String OBSERVED_FOLDER_TREDICESIMA = "C:\\Users\\ATON User 5\\Desktop\\dir\\tredicesima\\";
-    public static final String OBSERVED_FOLDER_COMPLEANNO = "C:\\Users\\ATON User 5\\Desktop\\dir\\compleanno\\";
-    public static final String OBSERVED_FOLDER_FINERAPPORTO = "C:\\Users\\ATON User 5\\Desktop\\dir\\finerapporto\\";
+    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir\\";
+    private static Map<WatchKey, Path> watchKeyToPathMap = new HashMap<>();
 
     @Async("watcher")
     public void watcher(BufferEmail bufferEmail){
 
+        try{
+            java.nio.file.WatchService watchService = FileSystems.getDefault().newWatchService();
+            watch (watchService, Paths.get(OBSERVED_FOLDER), bufferEmail);
 
-        Files.walkFileTree(){
+        }catch (Exception e){}
+
+/*
+        if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+            System.out.format("Creazione del file %s %n", fileName);
 
         }
 
-        Path pathStandard = Paths.get(OBSERVED_FOLDER_STANDARD);
-        Path pathTredicesima = Paths.get(OBSERVED_FOLDER_TREDICESIMA);
-        Path pathCompleanno = Paths.get(OBSERVED_FOLDER_COMPLEANNO);
-        Path pathFineRapporto = Paths.get(OBSERVED_FOLDER_FINERAPPORTO);
+ */
 
-        try{
-            java.nio.file.WatchService watcher = FileSystems.getDefault().newWatchService();
-            WatchKey keyStandard = pathStandard.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-            WatchKey keyTredicesima = pathTredicesima.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-            WatchKey keyCompleanno = pathCompleanno.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-            WatchKey keyFineRapporto = pathFineRapporto.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-            while(true) {
 
-                try {
-                    keyStandard = watcher.take();
-                   } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+
+
+
+
+    }
+
+    private void watch(java.nio.file.WatchService watchService, Path start, BufferEmail bufferEmail) throws IOException, InterruptedException {
+
+        registerTree(watchService, start);
+
+        while(true){
+
+            WatchKey key = watchService.take();
+            List<WatchEvent<?>> events = key.pollEvents();
+            for (WatchEvent event : events) {
+                WatchEvent.Kind<?> kind= event.kind();
+                Path pathEvent =(Path)event.context();
+                //Path directory = watchKeyToPathMap.get(key);
+                Path directory = (Path) key.watchable();
+                Path child = directory.resolve(pathEvent);
+                if (kind == StandardWatchEventKinds.ENTRY_CREATE && Files.isDirectory(child)){
+                    registerTree(watchService, child);
                 }
-                List<WatchEvent<?>> events = keyStandard.pollEvents();
-                for(WatchEvent event : events) {
-                    WatchEvent.Kind<?> kind = event.kind();
-                    WatchEvent<Path> ev = (WatchEvent<Path>) event;
-                    Path fileName = ev.context();
-                    if (kind == StandardWatchEventKinds.OVERFLOW) {
-                        continue;
-                    }
-                    if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-                        System.out.format("Creazione del file %s %n", fileName);
-                        if(!(validator.PayslipFileNameValidator(fileName.getFileName().toString()))){
-                            System.out.println("il payslip " + fileName + " non è stato slavato nome del file non corretto");
-                        }else{
-                            Email email = payslipService.storePayslip(OBSERVED_FOLDER_STANDARD + fileName);
-                            if(email!=null) {
-                                bufferEmail.putEmail(email);
+                if (kind == StandardWatchEventKinds.ENTRY_CREATE){
+                    if (!Files.isDirectory(child)){
+                        String fileName = child.getFileName().toString();
+                        String extension = fileName.substring(fileName.length()-4);
+                        System.out.printf("%s : %s \n", child, kind );
+                        if (extension.toUpperCase().equals(".PDF")){
+
+                            if(!(validator.PayslipFileNameValidator(fileName))){
+                                System.out.println("il payslip " + fileName + " non è stato slavato nome del file non corretto");
                             }else{
-                                System.out.println("il payslip " + fileName + " non è stato slavato");
+                                Email email = payslipService.storePayslip(child);
+                                if(email!=null) {
+                                    bufferEmail.putEmail(email);
+                                }else{
+                                    System.out.println("il payslip " + fileName + " non è stato slavato");
+                                }
                             }
-                        }
+
+                        }else{System.out.println("non è un pdf");}
                     }
-                    if(kind == StandardWatchEventKinds.ENTRY_DELETE) {
-                        System.out.format("cancellazione del file %s %n", fileName);
-                    }
-                    if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-                        //System.out.format("il file %s è stato modificato %n", fileName);
-                    }
-                    boolean valid = keyStandard.reset();
-                    if (!valid) {
-                        break;
-                    }
+
+                }
+                System.out.printf("%s : %s \n", child, kind );
+            }
+
+            boolean valid = key.reset();
+            if(!valid) {
+                watchKeyToPathMap.remove(key);
+                if (watchKeyToPathMap.isEmpty()) {
+                    break;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+    }
+
+    private static void registerTree(java.nio.file.WatchService watchService, Path start)throws IOException{
+        Files.walkFileTree(start, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                WatchKey key = dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
+                        StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+                watchKeyToPathMap.put(key, dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+
     }
 
 }
