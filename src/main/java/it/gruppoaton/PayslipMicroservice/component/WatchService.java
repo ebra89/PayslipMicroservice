@@ -1,6 +1,7 @@
 package it.gruppoaton.PayslipMicroservice.component;
 
 
+import it.gruppoaton.PayslipMicroservice.Utils.BufferEmail;
 import it.gruppoaton.PayslipMicroservice.Utils.Validator;
 import it.gruppoaton.PayslipMicroservice.model.Email;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
@@ -27,26 +28,38 @@ public class WatchService{
     @Autowired
     Validator validator;
 
-    public static final String OBSERVED_FOLDER = "/home/dir/";
+    public static final String OBSERVED_FOLDER_STANDARD = "C:\\Users\\ATON User 5\\Desktop\\dir\\standard\\";
+    public static final String OBSERVED_FOLDER_TREDICESIMA = "C:\\Users\\ATON User 5\\Desktop\\dir\\tredicesima\\";
+    public static final String OBSERVED_FOLDER_COMPLEANNO = "C:\\Users\\ATON User 5\\Desktop\\dir\\compleanno\\";
+    public static final String OBSERVED_FOLDER_FINERAPPORTO = "C:\\Users\\ATON User 5\\Desktop\\dir\\finerapporto\\";
 
     @Async("watcher")
-    public void run(){
+    public void watcher(BufferEmail bufferEmail){
 
-        Path path = Paths.get(OBSERVED_FOLDER);
+
+        Files.walkFileTree(){
+
+        }
+
+        Path pathStandard = Paths.get(OBSERVED_FOLDER_STANDARD);
+        Path pathTredicesima = Paths.get(OBSERVED_FOLDER_TREDICESIMA);
+        Path pathCompleanno = Paths.get(OBSERVED_FOLDER_COMPLEANNO);
+        Path pathFineRapporto = Paths.get(OBSERVED_FOLDER_FINERAPPORTO);
 
         try{
             java.nio.file.WatchService watcher = FileSystems.getDefault().newWatchService();
-            WatchKey key = path.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_DELETE,
-                    StandardWatchEventKinds.ENTRY_MODIFY);
+            WatchKey keyStandard = pathStandard.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+            WatchKey keyTredicesima = pathTredicesima.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+            WatchKey keyCompleanno = pathCompleanno.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+            WatchKey keyFineRapporto = pathFineRapporto.register(watcher,  StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
             while(true) {
 
                 try {
-                    key = watcher.take();
-                } catch (InterruptedException e) {
+                    keyStandard = watcher.take();
+                   } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                List<WatchEvent<?>> events = key.pollEvents();
+                List<WatchEvent<?>> events = keyStandard.pollEvents();
                 for(WatchEvent event : events) {
                     WatchEvent.Kind<?> kind = event.kind();
                     WatchEvent<Path> ev = (WatchEvent<Path>) event;
@@ -59,14 +72,9 @@ public class WatchService{
                         if(!(validator.PayslipFileNameValidator(fileName.getFileName().toString()))){
                             System.out.println("il payslip " + fileName + " non è stato slavato nome del file non corretto");
                         }else{
-                            Email email = payslipService.storePayslip(OBSERVED_FOLDER+fileName);
+                            Email email = payslipService.storePayslip(OBSERVED_FOLDER_STANDARD + fileName);
                             if(email!=null) {
-                                emailService.run(email);
-                                try {
-                                    Thread.sleep(3000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                                bufferEmail.putEmail(email);
                             }else{
                                 System.out.println("il payslip " + fileName + " non è stato slavato");
                             }
@@ -76,9 +84,9 @@ public class WatchService{
                         System.out.format("cancellazione del file %s %n", fileName);
                     }
                     if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-                        System.out.format("il file %s è stato modificato %n", fileName);
+                        //System.out.format("il file %s è stato modificato %n", fileName);
                     }
-                    boolean valid = key.reset();
+                    boolean valid = keyStandard.reset();
                     if (!valid) {
                         break;
                     }

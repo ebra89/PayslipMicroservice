@@ -53,7 +53,7 @@ public class PayslipService {
                 try {
                     i.add(Integer.parseInt(s));
                 }catch (Exception ex){
-                    System.out.println(ex.getStackTrace());
+                    //System.out.println(ex.getStackTrace());
                 }
                 n++;
             }
@@ -68,14 +68,14 @@ public class PayslipService {
                 fis = new FileInputStream(file);
                 fis.read(fileContent);
             }catch (FileNotFoundException ex){
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }catch (IOException e){
-                e.printStackTrace();
+                //e.printStackTrace();
             }finally {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
 
@@ -90,6 +90,7 @@ public class PayslipService {
             String lastName = employee.getLastName();
             try {
                 payslipRepository.save(payslip);
+
             }catch (Exception e){
                 return null;
             }

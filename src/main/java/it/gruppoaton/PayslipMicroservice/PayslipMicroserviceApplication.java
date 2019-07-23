@@ -1,5 +1,7 @@
 package it.gruppoaton.PayslipMicroservice;
 
+import it.gruppoaton.PayslipMicroservice.Utils.BufferEmail;
+import it.gruppoaton.PayslipMicroservice.component.EmailService;
 import it.gruppoaton.PayslipMicroservice.component.WatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,15 +21,32 @@ public class PayslipMicroserviceApplication implements CommandLineRunner {
 	private WatchService watchService;
 
 	@Bean("watcher")
-	public TaskExecutor getAsyncExecutor(){
+	public TaskExecutor getAsyncExecutorWatcher(){
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(20);
 		executor.setMaxPoolSize(1000);
 		executor.setWaitForTasksToCompleteOnShutdown(true);
-		executor.setThreadNamePrefix("Async-");
+		executor.setThreadNamePrefix("Async-Watcher_");
 		return executor;
 
 	}
+
+	@Autowired
+	private EmailService emailService;
+
+	@Bean("emailSender")
+	public TaskExecutor getAsyncExecutorEmailSender(){
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(20);
+		executor.setMaxPoolSize(1000);
+		executor.setWaitForTasksToCompleteOnShutdown(true);
+		executor.setThreadNamePrefix("Async-EmailSender_");
+		return executor;
+
+	}
+
+	private BufferEmail bufferEmail = new BufferEmail(10, 4000);
+
 
 	public static void main(String[] args){
 		SpringApplication.run(PayslipMicroserviceApplication.class, args);
@@ -37,6 +56,8 @@ public class PayslipMicroserviceApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		watchService.run();
+		watchService.watcher(bufferEmail);
+		emailService.emailSender(bufferEmail);
+
 	}
 }

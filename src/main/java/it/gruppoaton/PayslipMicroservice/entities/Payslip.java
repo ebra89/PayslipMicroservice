@@ -1,6 +1,7 @@
 package it.gruppoaton.PayslipMicroservice.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Payslip {
@@ -15,6 +16,12 @@ public class Payslip {
     private int month;
 
     private int year;
+
+    private int version;
+
+    @OneToMany(mappedBy = "payslip" , cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    private List<PayslipType> types;
+
     private String typeFile;
 
     @ManyToOne
@@ -31,8 +38,19 @@ public class Payslip {
         this.year = year;
         this.employee = employee;
         this.typeFile = ".pdf";
+
     }
 
+    public Payslip(int idPayslip, byte[] payslipPdf, int month, int year, int version, List<PayslipType> types, String typeFile, Employee employee) {
+        this.idPayslip = idPayslip;
+        this.payslipPdf = payslipPdf;
+        this.month = month;
+        this.year = year;
+        this.version = version;
+        this.types = types;
+        this.typeFile = typeFile;
+        this.employee = employee;
+    }
 
     public int getIdPayslip() {
         return idPayslip;
@@ -80,5 +98,21 @@ public class Payslip {
 
     public void setTypeFile(String typeFile) {
         this.typeFile = typeFile;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public List<PayslipType> getTypes() {
+        return types;
+    }
+
+    public void setType(List<PayslipType> types) {
+        this.types = types;
     }
 }
