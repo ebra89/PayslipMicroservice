@@ -70,14 +70,14 @@ public class WatchService{
             for (WatchEvent event : events) {
                 WatchEvent.Kind<?> kind= event.kind();
                 Path pathEvent =(Path)event.context();
-                //Path directory = watchKeyToPathMap.get(key);
-                Path directory = (Path) key.watchable();
+                Path directory = watchKeyToPathMap.get(key);
+                //Path directory = (Path) key.watchable();
                 Path child = directory.resolve(pathEvent);
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE && Files.isDirectory(child)){
                     registerTree(watchService, child);
                 }
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE){
-                    if (!Files.isDirectory(child)){
+                    if (!Files.isDirectory(child)|| !(child.getParent().toString().equals(OBSERVED_FOLDER))){
                         String fileName = child.getFileName().toString();
                         String extension = fileName.substring(fileName.length()-4);
                         System.out.printf("%s : %s \n", child, kind );
