@@ -43,20 +43,6 @@ public class WatchService{
 
         }catch (Exception e){}
 
-/*
-        if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-            System.out.format("Creazione del file %s %n", fileName);
-
-        }
-
- */
-
-
-
-
-
-
-
     }
 
     private void watch(java.nio.file.WatchService watchService, Path start, BufferEmail bufferEmail) throws IOException, InterruptedException {
@@ -64,7 +50,6 @@ public class WatchService{
         registerTree(watchService, start);
 
         while(true){
-
             WatchKey key = watchService.take();
             List<WatchEvent<?>> events = key.pollEvents();
             for (WatchEvent event : events) {
@@ -110,7 +95,6 @@ public class WatchService{
             }
         }
     }
-
     private static void registerTree(java.nio.file.WatchService watchService, Path start)throws IOException{
         Files.walkFileTree(start, new SimpleFileVisitor<Path>(){
             @Override
