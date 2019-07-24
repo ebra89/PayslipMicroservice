@@ -103,16 +103,15 @@ public class PayslipService {
             Payslip payslip;
             List<Payslip> payslipsFind=payslipRepository.isExsit(employee,month,year, version, type);
             if (!payslipsFind.isEmpty()){
-                Payslip payslipExistent=payslipsFind.get(0);
-                payslipExistent.setPayslipPdf(fileContent);
-                payslip=payslipExistent;
+                Payslip payslipExisting=payslipsFind.get(0);
+                payslipExisting.setPayslipPdf(fileContent);
+                payslip=payslipExisting;
             }else{
                 payslip = new Payslip(fileContent, month, year, employee, version, type);
             }
 
 
-            String firstName = employee.getFirstName();
-            String lastName = employee.getLastName();
+
             try {
                 payslipRepository.save(payslip);
 
@@ -120,8 +119,10 @@ public class PayslipService {
                 System.out.println("salvataggio del payslip non riuscito " + e.getMessage());
                 return null;
             }
-
-            Email email = new Email(employee, "Nuovo cedolino"," Gentile "+firstName.toUpperCase()+" "+lastName.toUpperCase()+" hai un nuovo cedolino.");
+            String firstName = employee.getFirstName();
+            String lastName = employee.getLastName();
+            //Email email = new Email(employee, "Nuovo cedolino"," Gentile "+firstName.toUpperCase()+" "+lastName.toUpperCase()+" hai un nuovo cedolino.");
+            Email email = Email.createEmail(employee, type);
             return email;
 
     }
