@@ -31,7 +31,7 @@ public class WatchService{
     @Autowired
     Validator validator;
 
-    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir\\";
+    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir";
     private static Map<WatchKey, Path> watchKeyToPathMap = new HashMap<>();
 
     @Async("watcher")
@@ -62,7 +62,8 @@ public class WatchService{
                     registerTree(watchService, child);
                 }
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE){
-                    if (!Files.isDirectory(child)|| !(child.getParent().toString().equals(OBSERVED_FOLDER))){
+                    System.out.println(child.getParent().toString()+ "   " + OBSERVED_FOLDER);
+                    if (!Files.isDirectory(child)&&(!(child.getParent().toString().equals(OBSERVED_FOLDER)))){
                         String fileName = child.getFileName().toString();
                         String extension = fileName.substring(fileName.length()-4);
                         System.out.printf("%s : %s \n", child, kind );

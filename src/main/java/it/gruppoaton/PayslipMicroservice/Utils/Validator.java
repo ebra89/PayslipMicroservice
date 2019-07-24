@@ -80,10 +80,11 @@ public class Validator {
         if(!(fiscalCodeValidator(fiscalCode).equals("ok"))){
             System.out.println(fiscalCodeValidator(fiscalCode));
             System.out.println(fiscalCode);
-            return false;}
+            return false;
+        }
         if((employeeService.findByFc(fiscalCode))==null){System.out.println("employee con codice fiscale "+fiscalCode+" inesistente"); return false;}
 
-        if(!(s.getLast().toUpperCase().equals("PDF"))){System.out.println("estensione del file " + s.getLast()); return false;}
+        if(!(s.getLast().toUpperCase().equals("PDF"))){System.out.println("estensione del file " + s.getLast() + "non corretta" ); return false;}
     return true;
    }
 }
