@@ -71,13 +71,9 @@ public class PayslipService {
                 version=i.get(2);
             }
 
-
             String type;
             String[] p= StringUtils.split(path.getParent().toString(),"\\ /");
             type = p[p.length-1];
-
-
-
 
             byte fileContent [] = new byte[(int)file.length()];
             FileInputStream fis = null;
@@ -100,7 +96,7 @@ public class PayslipService {
             try {
                 employee = employeeService.findByFc(fiscalCode);
             }catch (Exception e){
-                System.out.println("Nessun utente con questo codice fiscale");
+                logger.error(fileName+" utente non esistente con questo codice fiscale ");
             }
 
             Payslip payslip;
@@ -113,8 +109,6 @@ public class PayslipService {
                 payslip = new Payslip(fileContent, month, year, employee, version, type);
             }
 
-
-
             try {
                 payslipRepository.save(payslip);
                 logger.info("hai salvato un nuovo cedolino! "+fileName);
@@ -124,7 +118,6 @@ public class PayslipService {
             }
             String firstName = employee.getFirstName();
             String lastName = employee.getLastName();
-            //Email email = new Email(employee, "Nuovo cedolino"," Gentile "+firstName.toUpperCase()+" "+lastName.toUpperCase()+" hai un nuovo cedolino.");
             Email email = Email.createEmail(employee, type);
             return email;
 
@@ -174,7 +167,6 @@ public class PayslipService {
                 m =" "+month;
             }
             int year = p.getYear();
-            System.out.println("month: "+m+""+"year "+year+"");
             String date = "01"+"/" + m+"/" + year;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate payslipDate = LocalDate.parse(date, formatter);

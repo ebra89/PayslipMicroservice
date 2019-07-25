@@ -34,7 +34,7 @@ public class WatchService{
     @Autowired
     Validator validator;
 
-    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
+    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir";
     private static Map<WatchKey, Path> watchKeyToPathMap = new HashMap<>();
 
     @Async("watcher")

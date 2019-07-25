@@ -2,12 +2,15 @@ package it.gruppoaton.PayslipMicroservice.Utils;
 
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 @Component
 public class Validator {
+
+    final static Logger logger = Logger.getLogger(Validator.class);
 
     @Autowired
     private EmployeeService employeeService;
@@ -50,8 +53,6 @@ public class Validator {
 
     public boolean PayslipFileNameValidator(String payslipFileName){
 
-
-
         String[] tokens = StringUtils.split(payslipFileName,"_-.");
 
         // controlla mese e anno
@@ -64,12 +65,15 @@ public class Validator {
             }catch (Exception ex){}
         }
         month =p.get(0);
-        if (month > 12 && month < 1){System.out.println("errore formato mese "+month); return false;
-
+        if (month > 12 && month < 1){
+            logger.error(payslipFileName +" errore formato mese "+month);
+            return false;
         }
 
         year = p.get(1);
-        if (year.toString().length()<4 ||year.toString().length()>4){System.out.println("errore formato anno "+year);return false;}
+        if (year.toString().length()<4 ||year.toString().length()>4){
+            logger.error(payslipFileName+" errore formato anno "+year);
+            return false;}
 
         //controllo codice fiscale
         LinkedList<String> s=new LinkedList<>();
@@ -78,13 +82,18 @@ public class Validator {
         }
         String fiscalCode= s.get(s.size()-2);
         if(!(fiscalCodeValidator(fiscalCode).equals("ok"))){
-            System.out.println(fiscalCodeValidator(fiscalCode));
-            System.out.println(fiscalCode);
+            logger.error(payslipFileName+" codice fiscale non valido!!!");
             return false;
         }
-        if((employeeService.findByFc(fiscalCode))==null){System.out.println("employee con codice fiscale "+fiscalCode+" inesistente"); return false;}
+        if((employeeService.findByFc(fiscalCode))==null){
+            logger.error(payslipFileName+" employee con codice fiscale "+fiscalCode+" inesistente");
+            return false;
+        }
 
-        if(!(s.getLast().toUpperCase().equals("PDF"))){System.out.println("estensione del file " + s.getLast() + "non corretta" ); return false;}
+        if(!(s.getLast().toUpperCase().equals("PDF"))){
+            logger.error(payslipFileName+" estensione del file " + s.getLast() + "non corretta" );
+            return false;
+        }
     return true;
    }
 }
