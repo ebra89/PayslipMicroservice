@@ -6,6 +6,7 @@ import it.gruppoaton.PayslipMicroservice.Utils.Validator;
 import it.gruppoaton.PayslipMicroservice.model.Email;
 import it.gruppoaton.PayslipMicroservice.services.EmployeeService;
 import it.gruppoaton.PayslipMicroservice.services.PayslipService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ import java.util.Map;
 @Service
 public class WatchService{
 
+    final static Logger logger = Logger.getLogger(WatchService.class);
+
     @Autowired
     private PayslipService payslipService;
 
@@ -31,7 +34,7 @@ public class WatchService{
     @Autowired
     Validator validator;
 
-    public static final String OBSERVED_FOLDER = "C:\\Users\\ATON User 5\\Desktop\\dir";
+    public static final String OBSERVED_FOLDER = "/home/ebrasupertramp/dir/";
     private static Map<WatchKey, Path> watchKeyToPathMap = new HashMap<>();
 
     @Async("watcher")
@@ -70,17 +73,19 @@ public class WatchService{
                         if (extension.toUpperCase().equals(".PDF")){
 
                             if(!(validator.PayslipFileNameValidator(fileName))){
-                                System.out.println("il payslip " + fileName + " non è stato slavato nome del file non corretto");
+                                logger.error("il payslip " + fileName + " non è stato slavato nome del file non corretto");
                             }else{
                                 Email email = payslipService.storePayslip(child);
                                 if(email!=null) {
                                     bufferEmail.putEmail(email);
                                 }else{
-                                    System.out.println("il payslip " + fileName + " non è stato slavato");
+                                    logger.error("il payslip " + fileName + " non è stato slavato");
                                 }
                             }
 
-                        }else{System.out.println("non è un pdf");}
+                        }else{
+                            logger.error("Error, non è un pdf "+fileName);
+                        }
                     }
 
                 }

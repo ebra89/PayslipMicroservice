@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class PayslipMicroserviceApplicationTests {
 
 
-
 	@Test
 	public void contextLoads() {
 

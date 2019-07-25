@@ -8,6 +8,7 @@ import it.gruppoaton.PayslipMicroservice.model.PayslipConverter;
 import it.gruppoaton.PayslipMicroservice.model.PayslipModel;
 import it.gruppoaton.PayslipMicroservice.repositories.PayslipRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,8 @@ import java.util.List;
 
 @Service
 public class PayslipService {
+
+    final static Logger logger = Logger.getLogger(PayslipService.class);
 
     @Autowired
     private PayslipRepository payslipRepository;
@@ -114,9 +117,9 @@ public class PayslipService {
 
             try {
                 payslipRepository.save(payslip);
-
+                logger.info("hai salvato un nuovo cedolino! "+fileName);
             }catch (Exception e){
-                System.out.println("salvataggio del payslip non riuscito " + e.getMessage());
+                logger.error("salvataggio su db non riuscito!! "+fileName);
                 return null;
             }
             String firstName = employee.getFirstName();
